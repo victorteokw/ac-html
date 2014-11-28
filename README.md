@@ -34,6 +34,5 @@ Additionally you need to add these lines:
 (add-to-list 'web-mode-ac-sources-alist
   '("html" . (ac-source-html-tag
 		          ac-source-html-attribute
-		          ac-source-html-attribute-2))
-)
+		          ac-source-html-attribute-2)))
 ```
