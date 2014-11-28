@@ -63,17 +63,17 @@
   	(head-declared nil) (body-declared nil)
   	(html-doctype-level nil) (head-body-level nil)
   	(inside-head-1-level nil) (inside-body-1-level nil))
-    
+
     ;; inside head or not
     (and (save-excursion (re-search-backward "<head" nil t))
     	 (save-excursion (re-search-forward "</head>" nil t))
     	 (setq inside-head-1-level t))
-    
+
     ;; inside body or not
     (and (save-excursion (search-backward-regexp "<body" nil t))
     	 (save-excursion (search-forward-regexp "</body>" nil t))
     	 (setq inside-body-1-level t))
-    
+
     ;; inside html or not
     (or inside-head-1-level inside-body-1-level
     	(and (save-excursion (search-backward-regexp "<html" nil t))
@@ -83,17 +83,17 @@
     ;; must be top level
     (or inside-head-1-level inside-body-1-level head-body-level
     	(setq html-doctype-level t))
-    
+
     ;; if top level check if doctype and html declared
     (if html-doctype-level
     	(progn
     	  (and (save-excursion (goto-char (point-min))
-    			      (search-forward-regexp "<!DOCTYPE" nil t))
+                               (search-forward-regexp "<!DOCTYPE" nil t))
     	       (setq doctype-declared t))
     	  (and (save-excursion (goto-char (point-min))
     			       (search-forward-regexp "<html" nil t))
     	       (setq html-declared t))))
-    
+
     ;; if head or body level
     (if head-body-level
     	(progn
@@ -109,14 +109,14 @@
     	  (head-body-level html-first-child-element-list)
     	  (inside-head-1-level html-all-element-list)
   	  (inside-body-1-level html-all-element-list))
-))
+    ))
 
 (defconst html-package-dir (file-name-directory load-file-name))
 
 (defun ac-source-html-tag-documentation (symbol)
   (let* ((where-to-find
-	 (expand-file-name "html-stuff/html-tag-short-docs"
-			   html-package-dir))
+          (expand-file-name "html-stuff/html-tag-short-docs"
+                            html-package-dir))
 	 (doc-file (expand-file-name symbol where-to-find)))
     (if (file-exists-p doc-file)
 	(progn
