@@ -1,10 +1,11 @@
-;;; ac-html.el --- Emacs auto complete source for html tag and attributes.
+;;; ac-html.el --- auto complete source for html tags and attributes
 
 ;; Copyright (C) 2014 Zhang Kai Yu
 
 ;; Author: Zhang Kai Yu <yeannylam@gmail.com>
 ;; Version: 0.1.0
 ;; Keywords: rails, ruby
+;; Package-Requires: ((auto-complete "1.4"))
 ;; URL: https://github.com/cheunghy/ac-html
 
 ;;; Commentary:
