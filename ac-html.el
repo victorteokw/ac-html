@@ -25,33 +25,33 @@
 
 (require 'auto-complete)
 
-(defvar html-root-element-list
+(defvar ac-html-root-element-list
   (list
    "html" "!DOCTYPE html"))
 
-(defvar html-first-child-element-list
+(defvar ac-html-first-child-element-list
   (list
    "head" "body"))
 
-(defvar html-unique-element-list
+(defvar ac-html-unique-element-list
   (list
    "html" "head" "body" "title"))
 
-(defvar html-block-level-element-list
+(defvar ac-html-block-level-element-list
   (list
    "address" "article" "aside" "audio" "blockquote" "canvas" "dd" "div" "dl"
    "fieldset" "figcaption" "figure" "footer" "form" "h1" "h2" "h3" "h4" "h5"
    "h6" "header" "hgroup" "hr" "noscript" "ol" "output" "p" "pre" "section"
    "table" "tfoot" "ul" "video"))
 
-(defvar html-inline-element-list
+(defvar ac-html-inline-element-list
   (list
    "b" "big" "i" "small" "tt"
    "abbr" "acronym" "cite" "code" "dfn" "em" "kbd" "strong" "samp" "var"
    "a" "bdo" "br" "img" "map" "object" "q" "script" "span" "sub" "sup"
    "button" "input" "label" "select" "textarea"))
 
-(defvar html-all-element-list
+(defvar ac-html-all-element-list
   (list
    "a" "abbr" "acronym" "address" "applet" "area" "article" "aside" "audio"
    "b" "base" "basefont" "bdi" "bdo"
@@ -76,10 +76,10 @@
    "track" "tt" "u" "ul" "var" "video" "wbr" "xmp"
    ))
 
-(defvar html-user-defined-class-list
+(defvar ac-html-user-defined-class-list
   '())
 
-(defvar html-user-defined-id-list
+(defvar ac-html-user-defined-id-list
   '())
 
 (defun ac-source-html-tag-candidates ()
@@ -130,18 +130,18 @@
     	       (setq body-declared t))))
 
     ;; return value
-    (cond (html-doctype-level html-root-element-list)
-    	  (head-body-level html-first-child-element-list)
-    	  (inside-head-1-level html-all-element-list)
-  	  (inside-body-1-level html-all-element-list))
+    (cond (html-doctype-level ac-html-root-element-list)
+    	  (head-body-level ac-html-first-child-element-list)
+    	  (inside-head-1-level ac-html-all-element-list)
+  	  (inside-body-1-level ac-html-all-element-list))
     ))
 
-(defconst html-package-dir (file-name-directory load-file-name))
+(defconst ac-html-package-dir (file-name-directory load-file-name))
 
 (defun ac-source-html-tag-documentation (symbol)
   (let* ((where-to-find
           (expand-file-name "html-stuff/html-tag-short-docs"
-                            html-package-dir))
+                            ac-html-package-dir))
 	 (doc-file (expand-file-name symbol where-to-find)))
     (if (file-exists-p doc-file)
 	(progn
@@ -170,12 +170,12 @@
   (let* ((tag-string (ac-html--current-html-tag))
 	 (global-attributes-file
 	  (expand-file-name "html-stuff/html-attributes-list/global"
-			    html-package-dir))
+			    ac-html-package-dir))
 	 (this-attributes-file-name
 	  (format "html-stuff/html-attributes-list/%s" tag-string))
 	 (this-attributes-file
 	  (expand-file-name this-attributes-file-name
-			    html-package-dir))
+			    ac-html-package-dir))
 	 (list-to-return ()))
 
     (if (file-exists-p global-attributes-file)
@@ -192,7 +192,7 @@
 (defun ac-source-html-attribute-documentation (symbol)
   (let* ((where-to-find
   	  (expand-file-name "html-stuff/html-attributes-short-docs"
-  			    html-package-dir))
+  			    ac-html-package-dir))
   	 (tag-string (ac-html--current-html-tag))
   	 (tag-doc-file-name (format "%s-%s" tag-string symbol))
   	 (global-doc-file-name (format "%s-%s" "global" symbol))
