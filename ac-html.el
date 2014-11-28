@@ -1,3 +1,28 @@
+;;; ac-html.el --- Emacs auto complete source for html tag and attributes.
+
+;; Copyright (C) 2014 Zhang Kai Yu
+
+;; Author: Zhang Kai Yu <yeannylam@gmail.com>
+;; Version: 0.1.0
+;; Keywords: rails, ruby
+;; URL: https://github.com/cheunghy/ac-html
+
+;;; Commentary:
+
+;; Configuration:
+;; Add these lines
+;; (add-to-list 'ac-sources 'ac-source-html-tag)
+;; (add-to-list 'ac-sources 'ac-source-html-attribute)
+;; (add-to-list 'ac-sources 'ac-source-html-attribute-2)
+;; If you are using web-mode:
+;; Additionally you need to add these lines:
+;; (add-to-list 'web-mode-ac-sources-alist
+;;              '("html" . (ac-source-html-tag
+;;                          ac-source-html-attribute
+;;                          ac-source-html-attribute-2)))
+
+;;; Code:
+
 (require 'auto-complete)
 
 (defvar html-root-element-list
@@ -206,3 +231,6 @@
     (symbol . "a")
     (document . ac-source-html-attribute-documentation)
     ))
+
+(provide 'ac-html)
+;;; ac-html.el ends here
