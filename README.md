@@ -1,7 +1,7 @@
 ac-html
 =======
 
-Auto complete source for html tags and attributes.
+Emacs auto complete source for html tag and attributes.
 
 Vision
 ------
