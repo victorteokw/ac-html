@@ -3,13 +3,20 @@ ac-html
 
 Emacs auto complete source for html tag and attributes.
 
+Watch [Screencast](https://www.youtube.com/watch?v=UrXNgrN4d5Y).
+
 Vision
 ------
 Provide accurate and intelligent auto completion to HTML and css.
+
 Support haml and slim.
+
 Add boolean attribute recognition.
+
 For non-boolean attribute, auto complete ``=""`` and posit cursor in the middle of quotes.
+
 Add class source and auto complete class names.
+
 Add id source and auto complete id names.
 
 Issues
