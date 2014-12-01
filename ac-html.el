@@ -27,13 +27,11 @@
 ;; Add these lines
 ;; (add-to-list 'ac-sources 'ac-source-html-tag)
 ;; (add-to-list 'ac-sources 'ac-source-html-attribute)
-;; (add-to-list 'ac-sources 'ac-source-html-attribute-2)
 ;; If you are using web-mode:
 ;; Additionally you need to add these lines:
 ;; (add-to-list 'web-mode-ac-sources-alist
 ;;              '("html" . (ac-source-html-tag
-;;                          ac-source-html-attribute
-;;                          ac-source-html-attribute-2)))
+;;                          ac-source-html-attribute)))
 
 ;;; Code:
 
@@ -176,7 +174,7 @@
 (defun ac-html--current-html-tag ()
   "Return current html tag user is typing on."
   (let* ((tag-search (save-excursion
-		       (re-search-backward "<\\(\\w+\\)[ ]+" nil t)))
+		       (re-search-backward "<\\(\\w+\\)[[:space:]]+" nil t)))
 	 (tag-string (match-string 1)))
     tag-string))
 
@@ -234,15 +232,8 @@
 
 (defvar ac-source-html-attribute
   '((candidates . (ac-source-html-attribute-candidates))
-    (prefix . "<\\w+[ ]+\\(.*\\)")
+    (prefix . "<\\w[^>]*[[:space:]]+\\(.*\\)")
     (symbool . "a")
-    (document . ac-source-html-attribute-documentation)
-    ))
-
-(defvar ac-source-html-attribute-2
-  '((candidates . (ac-source-html-attribute-candidates))
-    (prefix . "[\\w+\"]+[ ]+\\(.*\\)")
-    (symbol . "a")
     (document . ac-source-html-attribute-documentation)
     ))
 
