@@ -32,6 +32,8 @@
 ;; (add-to-list 'web-mode-ac-sources-alist
 ;;              '("html" . (ac-source-html-tag
 ;;                          ac-source-html-attribute)))
+;; If you are using haml-mode:
+;; use `ac-source-haml-tag' and `ac-source-haml-attribute'
 
 ;;; Code:
 
@@ -227,15 +229,13 @@
   '((candidates . ac-source-html-tag-candidates)
     (prefix . "<\\(.*\\)")
     (symbol . "t")
-    (document . ac-source-html-tag-documentation)
-    ))
+    (document . ac-source-html-tag-documentation)))
 
 (defvar ac-source-html-attribute
   '((candidates . (ac-source-html-attribute-candidates))
     (prefix . "<\\w[^>]*[[:space:]]+\\(.*\\)")
     (symbol . "a")
-    (document . ac-source-html-attribute-documentation)
-    ))
+    (document . ac-source-html-attribute-documentation)))
 
 (provide 'ac-html)
 ;;; ac-html.el ends here

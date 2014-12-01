@@ -9,7 +9,7 @@ Vision
 ------
 Provide accurate and intelligent auto completion to HTML and css.
 
-Support haml and slim.
+Support slim.
 
 Add class source and auto complete class names.
 
@@ -37,3 +37,6 @@ Additionally you need to add these lines:
   '("html" . (ac-source-html-tag
 		          ac-source-html-attribute)))
 ```
+
+### If you are using haml-mode:
+use \`ac-source-haml-tag' and \`ac-source-haml-attrubute'
