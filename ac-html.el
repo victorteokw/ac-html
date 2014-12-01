@@ -233,7 +233,7 @@
 (defvar ac-source-html-attribute
   '((candidates . (ac-source-html-attribute-candidates))
     (prefix . "<\\w[^>]*[[:space:]]+\\(.*\\)")
-    (symbool . "a")
+    (symbol . "a")
     (document . ac-source-html-attribute-documentation)
     ))
 
