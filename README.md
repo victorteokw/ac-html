@@ -15,10 +15,6 @@ Add class source and auto complete class names.
 
 Add id source and auto complete id names.
 
-Issues
-------
-It may contain some bugs.
-
 Usage
 -----
 
@@ -40,3 +36,13 @@ Additionally you need to add these lines:
 
 ### If you are using haml-mode:
 use \`ac-source-haml-tag' and \`ac-source-haml-attrubute'
+
+Issues
+------
+It may contain some bugs.
+
+Contribution
+------
+Any contribution is welcome.
+Requested features and bad bugs are listed in issues.
+Also, setting up test is needed.
