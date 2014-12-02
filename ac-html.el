@@ -180,8 +180,8 @@
 	 (tag-string (match-string 1)))
     tag-string))
 
-(defun ac-source-html-attribute-candidates ()
-  (let* ((tag-string (ac-html--current-html-tag))
+(defun ac-html--attribute-candidates (source)
+  (let* ((tag-string source)
 	 (global-attributes-file
 	  (expand-file-name "html-stuff/html-attributes-list/global"
 			    ac-html-package-dir))
@@ -202,6 +202,9 @@
 	      (append list-to-return
 		      (ac-html--load-list-from-file this-attributes-file))))
     list-to-return))
+
+(defun ac-source-html-attribute-candidates ()
+  (ac-html--attribute-candidates (ac-html--current-html-tag)))
 
 (defun ac-source-html-attribute-documentation (symbol)
   (let* ((where-to-find
@@ -232,7 +235,7 @@
     (document . ac-source-html-tag-documentation)))
 
 (defvar ac-source-html-attribute
-  '((candidates . (ac-source-html-attribute-candidates))
+  '((candidates . ac-source-html-attribute-candidates)
     (prefix . "<\\w[^>]*[[:space:]]+\\(.*\\)")
     (symbol . "a")
     (document . ac-source-html-attribute-documentation)))

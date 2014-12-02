@@ -26,6 +26,17 @@
 
 (require 'ac-html)
 
+(defun ac-html--current-haml-tag ()
+  "Return current haml tag user is typing on."
+  (let* ((tag-search (save-excursion
+                       (re-search-backward "%\\(\\w+\\)" nil t)))
+         (tag-string (match-string 1)))
+    (message tag-string)
+    tag-string))
+
+(defun ac-source-haml-attribute-candidates ()
+  (ac-html--attribute-candidates (ac-html--current-haml-tag)))
+
 (defun ac-source-haml-tag-candidates ()
   ac-html-all-element-list)
 
@@ -36,7 +47,7 @@
     (document . ac-source-html-tag-documentation)))
 
 (defvar ac-source-haml-attribute
-  '((candidates . ac-source-html-attribute-candidates)
+  '((candidates . ac-source-haml-attribute-candidates)
     (prefix . ":\\(.*\\)")
     (symbol . "a")
     (document . ac-source-html-attribute-documentation)))
