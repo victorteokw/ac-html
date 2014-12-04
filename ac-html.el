@@ -308,7 +308,7 @@ Those files may have documantation delimited by \" \" symbol."
     (document . ac-source-html-attribute-documentation)))
 
 (defvar ac-source-html-attribute-value
-  '((candidates . (ac-source-html-attribute-value-candidates))
+  '((candidates . ac-source-html-attribute-value-candidates)
     (prefix . ac-html-value-prefix)
     (document . ac-source-html-attribute-value-document)
     (symbol . "v")))
