@@ -206,27 +206,31 @@
 (defun ac-source-html-attribute-candidates ()
   (ac-html--attribute-candidates (ac-html--current-html-tag)))
 
+(defmacro ac-html--attribute-documentation (attribute tag)
+  `(let* ((where-to-find
+           (expand-file-name "html-stuff/html-attributes-short-docs"
+                             ac-html-package-dir))
+          (tag-string ,tag)
+          (tag-doc-file-name (format "%s-%s" tag-string ,attribute))
+          (global-doc-file-name (format "%s-%s" "global" ,attribute))
+          (tag-doc-file (expand-file-name tag-doc-file-name where-to-find))
+          (global-doc-file
+           (expand-file-name global-doc-file-name where-to-find))
+          (doc-to-return ""))
+     (if (file-exists-p tag-doc-file)
+         (setq doc-to-return (with-temp-buffer
+                               (insert-file-contents tag-doc-file)
+                               (buffer-string))))
+     (if (string-equal doc-to-return "")
+         (if (file-exists-p global-doc-file)
+             (setq doc-to-return (with-temp-buffer
+                                   (insert-file-contents global-doc-file)
+                                   (buffer-string)))))
+     doc-to-return))
+
 (defun ac-source-html-attribute-documentation (symbol)
-  (let* ((where-to-find
-  	  (expand-file-name "html-stuff/html-attributes-short-docs"
-  			    ac-html-package-dir))
-  	 (tag-string (ac-html--current-html-tag))
-  	 (tag-doc-file-name (format "%s-%s" tag-string symbol))
-  	 (global-doc-file-name (format "%s-%s" "global" symbol))
-  	 (tag-doc-file (expand-file-name tag-doc-file-name where-to-find))
-  	 (global-doc-file
-  	  (expand-file-name global-doc-file-name where-to-find))
-         (doc-to-return ""))
-    (if (file-exists-p tag-doc-file)
-        (setq doc-to-return (with-temp-buffer
-                              (insert-file-contents tag-doc-file)
-                              (buffer-string))))
-    (if (string-equal doc-to-return "")
-        (if (file-exists-p global-doc-file)
-            (setq doc-to-return (with-temp-buffer
-                                  (insert-file-contents global-doc-file)
-                                  (buffer-string)))))
-    doc-to-return))
+  (ac-html--attribute-documentation symbol
+                                    (ac-html--current-html-tag)))
 
 (defvar ac-source-html-tag
   '((candidates . ac-source-html-tag-candidates)

@@ -40,6 +40,10 @@
 (defun ac-source-haml-tag-candidates ()
   ac-html-all-element-list)
 
+(defun ac-source-haml-attribute-documentation (symbol)
+  (ac-html--attribute-documentation symbol
+                                    (ac-html--current-haml-tag)))
+
 (defvar ac-source-haml-tag
   '((candidates . ac-source-haml-tag-candidates)
     (prefix . "%\\(.*\\)")
@@ -50,7 +54,7 @@
   '((candidates . ac-source-haml-attribute-candidates)
     (prefix . ":\\(.*\\)")
     (symbol . "a")
-    (document . ac-source-html-attribute-documentation)))
+    (document . ac-source-haml-attribute-documentation)))
 
 (provide 'ac-haml)
 ;;; ac-haml.el ends here
