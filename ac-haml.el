@@ -1,4 +1,4 @@
-;;; ac-haml.el ---  --- Emacs auto complete source for html tag and attributes.
+;;; ac-haml.el --- auto complete source for html tag and attributes
 
 ;; Copyright (C) 2014 Zhang Kai Yu
 
