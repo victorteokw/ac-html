@@ -1,4 +1,4 @@
-;;; ac-haml.el ---  --- Emacs auto complete source for html tag and attributes.
+;;; ac-haml.el --- auto complete source for html tag and attributes
 
 ;; Copyright (C) 2014 Zhang Kai Yu
 
@@ -26,8 +26,23 @@
 
 (require 'ac-html)
 
+(defun ac-html--current-haml-tag ()
+  "Return current haml tag user is typing on."
+  (let* ((tag-search (save-excursion
+                       (re-search-backward "%\\(\\w+\\)" nil t)))
+         (tag-string (match-string 1)))
+    (message tag-string)
+    tag-string))
+
+(defun ac-source-haml-attribute-candidates ()
+  (ac-html--attribute-candidates (ac-html--current-haml-tag)))
+
 (defun ac-source-haml-tag-candidates ()
   ac-html-all-element-list)
+
+(defun ac-source-haml-attribute-documentation (symbol)
+  (ac-html--attribute-documentation symbol
+                                    (ac-html--current-haml-tag)))
 
 (defvar ac-source-haml-tag
   '((candidates . ac-source-haml-tag-candidates)
@@ -36,10 +51,10 @@
     (document . ac-source-html-tag-documentation)))
 
 (defvar ac-source-haml-attribute
-  '((candidates . ac-source-html-attribute-candidates)
+  '((candidates . ac-source-haml-attribute-candidates)
     (prefix . ":\\(.*\\)")
     (symbol . "a")
-    (document . ac-source-html-attribute-documentation)))
+    (document . ac-source-haml-attribute-documentation)))
 
 (provide 'ac-haml)
 ;;; ac-haml.el ends here
