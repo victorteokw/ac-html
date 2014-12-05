@@ -60,6 +60,8 @@
   :type '(repeat symbol)
   :group 'auto-complete-html)
 
+;;; Variables
+
 (defvar ac-html-root-element-list
   (list
    "html" "!DOCTYPE html"))
@@ -117,20 +119,7 @@
 (defvar ac-html-user-defined-id-list
   '())
 
-(defun ac-source-html-tag-candidates ()
-  ac-html-all-element-list)
-
-(defun ac-source-html-tag-documentation (symbol)
-  (let* ((where-to-find
-          (expand-file-name "html-tag-short-docs"
-                            ac-html-basic-source-dir))
-	 (doc-file (expand-file-name symbol where-to-find)))
-    (if (file-exists-p doc-file)
-	(progn
-	  (with-temp-buffer
-	    (insert-file-contents doc-file)
-	    (buffer-string)))
-      "Currently not documented.")))
+;;; Functions
 
 (defun ac-html--load-list-from-file (filepath)
   "Return a list separated by \\n from FILEPATH."
@@ -141,19 +130,27 @@
 		     (point-min) (point-max)))
 		  "\n" t)))
 
-(defun ac-html--current-html-tag ()
-  "Return current html tag user is typing on."
-  (let* ((tag-search (save-excursion
-		       (re-search-backward "<\\(\\w+\\)[[:space:]]+" nil t)))
-	 (tag-string (match-string 1)))
-    tag-string))
-
-(defun ac-html--current-html-attribute ()
-  "Return current html tag's attribute user is typing on."
-  (let* ((tag-search (save-excursion
-		       (re-search-backward "[^a-z-]\\([a-z-]+\\)=" nil t)))
-	 (tag-string (match-string 1)))
-    tag-string))
+(defmacro ac-html--attribute-documentation (attribute tag)
+  `(let* ((where-to-find
+           (expand-file-name "html-attributes-short-docs"
+                             ac-html-basic-source-dir))
+          (tag-string ,tag)
+          (tag-doc-file-name (format "%s-%s" tag-string ,attribute))
+          (global-doc-file-name (format "%s-%s" "global" ,attribute))
+          (tag-doc-file (expand-file-name tag-doc-file-name where-to-find))
+          (global-doc-file
+           (expand-file-name global-doc-file-name where-to-find))
+          (doc-to-return ""))
+     (if (file-exists-p tag-doc-file)
+         (setq doc-to-return (with-temp-buffer
+                               (insert-file-contents tag-doc-file)
+                               (buffer-string))))
+     (if (string-equal doc-to-return "")
+         (if (file-exists-p global-doc-file)
+             (setq doc-to-return (with-temp-buffer
+                                   (insert-file-contents global-doc-file)
+                                   (buffer-string)))))
+     doc-to-return))
 
 (defun ac-html--attribute-candidates (source)
   (let* ((tag-string source)
@@ -178,30 +175,37 @@
 		      (ac-html--load-list-from-file this-attributes-file))))
     list-to-return))
 
+(defun ac-html--current-html-tag ()
+  "Return current html tag user is typing on."
+  (let* ((tag-search (save-excursion
+		       (re-search-backward "<\\(\\w+\\)[[:space:]]+" nil t)))
+	 (tag-string (match-string 1)))
+    tag-string))
+
+(defun ac-html--current-html-attribute ()
+  "Return current html tag's attribute user is typing on."
+  (let* ((tag-search (save-excursion
+		       (re-search-backward "[^a-z-]\\([a-z-]+\\)=" nil t)))
+	 (tag-string (match-string 1)))
+    tag-string))
+
+(defun ac-source-html-tag-candidates ()
+  ac-html-all-element-list)
+
+(defun ac-source-html-tag-documentation (symbol)
+  (let* ((where-to-find
+          (expand-file-name "html-tag-short-docs"
+                            ac-html-basic-source-dir))
+	 (doc-file (expand-file-name symbol where-to-find)))
+    (if (file-exists-p doc-file)
+	(progn
+	  (with-temp-buffer
+	    (insert-file-contents doc-file)
+	    (buffer-string)))
+      "Currently not documented.")))
+
 (defun ac-source-html-attribute-candidates ()
   (ac-html--attribute-candidates (ac-html--current-html-tag)))
-
-(defmacro ac-html--attribute-documentation (attribute tag)
-  `(let* ((where-to-find
-           (expand-file-name "html-attributes-short-docs"
-                             ac-html-basic-source-dir))
-          (tag-string ,tag)
-          (tag-doc-file-name (format "%s-%s" tag-string ,attribute))
-          (global-doc-file-name (format "%s-%s" "global" ,attribute))
-          (tag-doc-file (expand-file-name tag-doc-file-name where-to-find))
-          (global-doc-file
-           (expand-file-name global-doc-file-name where-to-find))
-          (doc-to-return ""))
-     (if (file-exists-p tag-doc-file)
-         (setq doc-to-return (with-temp-buffer
-                               (insert-file-contents tag-doc-file)
-                               (buffer-string))))
-     (if (string-equal doc-to-return "")
-         (if (file-exists-p global-doc-file)
-             (setq doc-to-return (with-temp-buffer
-                                   (insert-file-contents global-doc-file)
-                                   (buffer-string)))))
-     doc-to-return))
 
 (defun ac-source-html-attribute-documentation (symbol)
   (ac-html--attribute-documentation symbol
@@ -246,8 +250,8 @@ Those files may have documantation delimited by \" \" symbol."
 
 (defun ac-source-html-attribute-value-document (symbol)
   (let* ( (word (if (symbolp symbol)
-                   (symbol-name symbol)
-                 symbol))
+                    (symbol-name symbol)
+                  symbol))
           (len (length word)) )
     (let ( help )
       (mapc '(lambda(line)
@@ -258,8 +262,8 @@ Those files may have documantation delimited by \" \" symbol."
       (replace-regexp-in-string "\\\\n" "\n" (substring help 1)))))
 
 (defun ac-html-value-prefix ()
-      (if (re-search-backward "\\w=[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
-	  (match-beginning 2)))
+  (if (re-search-backward "\\w=[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
+      (match-beginning 2)))
 
 (defvar ac-source-html-tag
   '((candidates . ac-source-html-tag-candidates)
