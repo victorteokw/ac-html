@@ -119,7 +119,21 @@
 (defvar ac-html-user-defined-id-list
   '())
 
+(defvar ac-html-completion-truncate-length 18
+  "[AC] truncation length for type summary.")
+
 ;;; Functions
+
+(defun ac-html--completion-beautify-items (summarytext items)
+  "Create popup items with truncated-summary"
+  (mapcar
+   (lambda (item)
+     (message "item: %s" item)
+     (popup-make-item
+      item
+      :summary (truncate-string-to-width summarytext
+                                         ac-html-completion-truncate-length 0 nil "...")))
+   items))
 
 (defun ac-html--load-list-from-file (filepath)
   "Return a list separated by \\n from FILEPATH."
@@ -167,12 +181,16 @@
     (if (file-exists-p global-attributes-file)
 	(setq list-to-return
 	      (append list-to-return
-		      (ac-html--load-list-from-file global-attributes-file))))
+                      (ac-html--completion-beautify-items
+                       (format "G, Attr <%s>" tag-string)
+                       (ac-html--load-list-from-file global-attributes-file)))))
 
     (if (file-exists-p this-attributes-file)
 	(setq list-to-return
 	      (append list-to-return
-		      (ac-html--load-list-from-file this-attributes-file))))
+                      (ac-html--completion-beautify-items
+                       (format "L, Attr <%s>" tag-string)
+                       (ac-html--load-list-from-file this-attributes-file)))))
     list-to-return))
 
 (defun ac-html--current-html-tag ()
@@ -183,14 +201,14 @@
     tag-string))
 
 (defun ac-html--current-html-attribute ()
-  "Return current html tag's attribute user is typing on."
-  (let* ((tag-search (save-excursion
+  "Return current html tag's attribute user is typing on." 
+ (let* ((tag-search (save-excursion
 		       (re-search-backward "[^a-z-]\\([a-z-]+\\)=" nil t)))
 	 (tag-string (match-string 1)))
     tag-string))
 
 (defun ac-source-html-tag-candidates ()
-  ac-html-all-element-list)
+  (ac-html--completion-beautify-items "tag" ac-html-all-element-list))
 
 (defun ac-source-html-tag-documentation (symbol)
   (let* ((where-to-find
@@ -235,11 +253,15 @@ Those files may have documantation delimited by \" \" symbol."
     (if (file-exists-p this-concrete-atribute-file)
 	(setq list-to-return
 	      (append list-to-return
-		      (ac-html--load-list-from-file this-concrete-atribute-file))))
+                      (ac-html--completion-beautify-items
+                       (format "L <%s %s>" tag-string attribute-string)
+                       (ac-html--load-list-from-file this-concrete-atribute-file)))))
     (if (file-exists-p this-global-attribute-file)
 	(setq list-to-return
 	      (append list-to-return
-		      (ac-html--load-list-from-file this-global-attribute-file))))
+                      (ac-html--completion-beautify-items
+                       (format "G <%s %s>" tag-string attribute-string)
+                       (ac-html--load-list-from-file this-global-attribute-file)))))
     list-to-return))
 
 (defun ac-source-html-attribute-value-candidates ()
