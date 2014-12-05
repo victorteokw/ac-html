@@ -1,6 +1,8 @@
 (require 'ac-html)
 
-(defvar fixture-dir (expand-file-name "fixtures" ac-html-test-dir))
+(setq ac-html-basic-source-dir (expand-file-name "sources" fixture-dir))
+
+;;; Core test
 
 (ert-deftest test-ac-html--load-list-from-file ()
   "Test `ac-html--load-list-from-file' loads the list separated by \\n.
@@ -8,6 +10,8 @@ If file exist."
   (let* ((file-name (expand-file-name "list.txt" fixture-dir))
          (list-from-file (ac-html--load-list-from-file file-name)))
     (should (equal list-from-file '("foo" "bar" "baz")))))
+
+;;; HTML test
 
 (defun test-suite-html-current-thing-scan (body)
   "This test suite is for 
@@ -32,3 +36,4 @@ If file exist."
    (lambda ()
      (goto-char 29)
      (should (equal (ac-html--current-html-attribute) "lang")))))
+
