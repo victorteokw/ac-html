@@ -27,11 +27,13 @@
 ;; Add these lines
 ;; (add-to-list 'ac-sources 'ac-source-html-tag)
 ;; (add-to-list 'ac-sources 'ac-source-html-attribute)
+;; (add-to-list 'ac-sources 'ac-source-html-attribute-value)
 ;; If you are using web-mode:
 ;; Additionally you need to add these lines:
 ;; (add-to-list 'web-mode-ac-sources-alist
 ;;              '("html" . (ac-source-html-tag
-;;                          ac-source-html-attribute)))
+;;                          ac-source-html-attribute
+;;                          ac-source-html-attribute-value)))
 ;; If you are using haml-mode:
 ;; use `ac-source-haml-tag' and `ac-source-haml-attribute'
 
@@ -180,6 +182,13 @@
 	 (tag-string (match-string 1)))
     tag-string))
 
+(defun ac-html--current-html-attribute ()
+  "Return current html tag's attribute user is typing on."
+  (let* ((tag-search (save-excursion
+		       (re-search-backward "[^a-z-]\\([a-z-]+\\)=" nil t)))
+	 (tag-string (match-string 1)))
+    tag-string))
+
 (defun ac-html--attribute-candidates (source)
   (let* ((tag-string source)
 	 (global-attributes-file
@@ -232,6 +241,60 @@
   (ac-html--attribute-documentation symbol
                                     (ac-html--current-html-tag)))
 
+(defun ac-source-html-attribute-value-candidates-internal ()
+  "Read html-stuff/html-attributes-complete/global-<ATTRIBUTE>
+and html-stuff/html-attributes-complete/<TAG>-<ATTRIBUTE> files
+
+Those files may have documantation delimited by \" \" symbol."
+  (let* ((tag-string (ac-html--current-html-tag))
+	 (attribute-string (ac-html--current-html-attribute))
+
+	 (this-global-attribute-file-name
+	  (format "html-stuff/html-attributes-complete/global-%s" attribute-string))
+	 (this-global-attribute-file
+	  (expand-file-name this-global-attribute-file-name
+			    ac-html-package-dir))
+
+	 (this-concrete-atribute-file-name
+	  (format "html-stuff/html-attributes-complete/%s-%s" tag-string attribute-string))
+	 (this-concrete-atribute-file
+	  (expand-file-name this-concrete-atribute-file-name
+			    ac-html-package-dir))
+	 (list-to-return ()))
+
+    (if (file-exists-p this-concrete-atribute-file)
+	(setq list-to-return
+	      (append list-to-return
+		      (ac-html--load-list-from-file this-concrete-atribute-file))))
+    (if (file-exists-p this-global-attribute-file)
+	(setq list-to-return
+	      (append list-to-return
+		      (ac-html--load-list-from-file this-global-attribute-file))))
+    list-to-return))
+
+(defun ac-source-html-attribute-value-candidates ()
+  (let ( (lines (ac-source-html-attribute-value-candidates-internal)) )
+    (mapcar '(lambda(line)
+               (replace-regexp-in-string "[ ].*" "" line))
+            lines)))
+
+(defun ac-source-html-attribute-value-document (symbol)
+  (let* ( (word (if (symbolp symbol)
+                   (symbol-name symbol)
+                 symbol))
+          (len (length word)) )
+    (let ( help )
+      (mapc '(lambda(line)
+               (when (>= (length line) len)
+                 (when (string= word (substring line 0 (length word)))
+                   (setq help (substring line (length word))))))
+            (ac-source-html-attribute-value-candidates-internal))
+      (replace-regexp-in-string "\\\\n" "\n" (substring help 1)))))
+
+(defun ac-html-value-prefix ()
+      (if (re-search-backward "\\w=[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
+	  (match-beginning 2)))
+
 (defvar ac-source-html-tag
   '((candidates . ac-source-html-tag-candidates)
     (prefix . "<\\(.*\\)")
@@ -243,6 +306,12 @@
     (prefix . "<\\w[^>]*[[:space:]]+\\(.*\\)")
     (symbol . "a")
     (document . ac-source-html-attribute-documentation)))
+
+(defvar ac-source-html-attribute-value
+  '((candidates . ac-source-html-attribute-value-candidates)
+    (prefix . ac-html-value-prefix)
+    (document . ac-source-html-attribute-value-document)
+    (symbol . "v")))
 
 (provide 'ac-html)
 ;;; ac-html.el ends here

@@ -37,6 +37,38 @@ Additionally you need to add these lines:
 ### If you are using haml-mode:
 use \`ac-source-haml-tag' and \`ac-source-haml-attrubute'
 
+### More customization
+
+If you want fire completion as fast as it possible only for these ac sources
+and for example change popup face, below hint help you:
+``` elisp
+(setq ac-source-html-tag
+      (append
+       '(
+         (candidate-face . your-cool-face)
+         (symbol . "Tag")
+         (requires . 0)) ac-source-html-tag))
+
+(setq ac-source-html-attribute
+      (append
+       '(
+         (candidate-face . your-cool-face)
+         (symbol . "ATR")
+         (requires . 0)) ac-source-html-attribute))
+
+(setq ac-source-html-attribute-value
+      (append
+       '(
+         (candidate-face . your-cool-face)
+         (symbol . "VAL")
+         (requires . 0)) ac-source-html-attribute-value))
+         
+;; if you use `web-mode` and set `(requires . 0)`, you may want disable
+;; auto-quotinng of web-mode because of bug popup.
+;; `smartparens-mode` as example of auto-pair quote may be used.
+(setq web-mode-enable-auto-quoting nil)
+```
+
 Issues
 ------
 It may contain some bugs.
