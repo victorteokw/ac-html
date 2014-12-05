@@ -71,6 +71,44 @@ and for example change popup face, below hint help you:
 (setq web-mode-enable-auto-quoting nil)
 ```
 
+#### Event attribute
+
+For event attribute completion you can use tern.js. Install tern via node.js `sudo npm install -g tern`,
+and package `tern-auto-complete` 
+Create `.tern-project` file in your project directory with `browser`:
+
+```json
+{
+  "libs": [
+    "browser",
+  ],
+    "plugins": {
+    }
+}
+```
+
+in your web-mode-hook add `ac-source-tern-completion` and enable tern-mode:
+
+
+```lisp
+(defun my-web-mode-hook ()
+  "Hook for Web mode."
+  (setq web-mode-ac-sources-alist
+        '(("css" . (
+                    ac-source-css-property))
+          ("html" . (
+                     ac-source-html-attribute-value
+                     ac-source-html-tag
+                     ac-source-html-attribute
+                     ac-source-tern-completion))
+          ("jsx" . (
+                     ac-source-tern-completion))
+          ("javascript" . (
+                     ac-source-tern-completion))))
+  (auto-complete-mode t)
+  (tern-mode t))
+```
+
 Issues
 ------
 It may contain some bugs.
