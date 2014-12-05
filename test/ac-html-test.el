@@ -11,6 +11,13 @@ If file exist."
          (list-from-file (ac-html--load-list-from-file file-name)))
     (should (equal list-from-file '("foo" "bar" "baz")))))
 
+(ert-deftest test-ac-html-all-element-list ()
+  "Test the array correct or not."
+  (should-not (equal ac-html-all-element-list '()))
+  (should (equal (car ac-html-all-element-list) "a"))
+  (should (equal (last ac-html-all-element-list 2) '("wbr" "xmp")))
+  )
+
 ;;; HTML test
 
 (defun test-suite-html-current-thing-scan (body)
