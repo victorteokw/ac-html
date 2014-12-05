@@ -22,18 +22,18 @@ Usage
 
 Add these lines
 ``` elisp
+(add-to-list 'ac-sources 'ac-source-html-attribute-value)
 (add-to-list 'ac-sources 'ac-source-html-tag)
 (add-to-list 'ac-sources 'ac-source-html-attribute)
-(add-to-list 'ac-sources 'ac-source-html-attribute-value)
 ```
 
 ### If you are using web-mode:
 Additionally you need to add these lines:
 ``` elisp
 (add-to-list 'web-mode-ac-sources-alist
-  '("html" . (ac-source-html-tag
-	      ac-source-html-attribute
-	      ac-source-html-attribute-value)))
+             '("html" . (ac-source-html-attribute-value
+                         ac-source-html-tag
+                         ac-source-html-attribute)))
 ```
 
 ### If you are using haml-mode:
