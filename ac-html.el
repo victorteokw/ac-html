@@ -128,7 +128,6 @@
   "Create popup items with truncated-summary"
   (mapcar
    (lambda (item)
-     (message "item: %s" item)
      (popup-make-item
       item
       :summary (truncate-string-to-width summarytext
