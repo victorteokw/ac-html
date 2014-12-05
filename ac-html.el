@@ -3,7 +3,7 @@
 ;; Copyright (C) 2014 Zhang Kai Yu
 
 ;; Author: Zhang Kai Yu <yeannylam@gmail.com>
-;; Version: 0.1.0
+;; Version: 0.2.0
 ;; Keywords: html, auto-complete, rails, ruby
 ;; Package-Requires: ((auto-complete "1.4"))
 ;; URL: https://github.com/cheunghy/ac-html
