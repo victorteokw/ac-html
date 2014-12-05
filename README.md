@@ -37,7 +37,7 @@ Additionally you need to add these lines:
 ```
 
 ### If you are using haml-mode:
-use \`ac-source-haml-tag' and \`ac-source-haml-attrubute'
+use \`ac-source-haml-tag' and \`ac-source-haml-attribute'
 
 ### More customization
 
