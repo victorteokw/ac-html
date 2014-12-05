@@ -41,6 +41,25 @@
 
 (require 'auto-complete)
 
+(defconst ac-html-package-dir (file-name-directory load-file-name)
+  "The directory where `ac-html' package exists.")
+
+(defconst ac-html-basic-source-dir
+  (expand-file-name "html-stuff" ac-html-package-dir)
+  "The directory where basic source of `ac-html' exists.")
+
+;;; Customization
+
+(defgroup auto-complete-html nil
+  "HTML Auto Complete."
+  :group 'auto-complete
+  :prefix "ac-html-")
+
+(defcustom ac-html-source-dirs '(ac-html-basic-source-dir)
+  "Extend through this custom variable."
+  :type '(repeat symbol)
+  :group 'auto-complete-html)
+
 (defvar ac-html-root-element-list
   (list
    "html" "!DOCTYPE html"))
@@ -152,12 +171,10 @@
   	  (inside-body-1-level ac-html-all-element-list))
     ))
 
-(defconst ac-html-package-dir (file-name-directory load-file-name))
-
 (defun ac-source-html-tag-documentation (symbol)
   (let* ((where-to-find
-          (expand-file-name "html-stuff/html-tag-short-docs"
-                            ac-html-package-dir))
+          (expand-file-name "html-tag-short-docs"
+                            ac-html-basic-source-dir))
 	 (doc-file (expand-file-name symbol where-to-find)))
     (if (file-exists-p doc-file)
 	(progn
@@ -192,13 +209,13 @@
 (defun ac-html--attribute-candidates (source)
   (let* ((tag-string source)
 	 (global-attributes-file
-	  (expand-file-name "html-stuff/html-attributes-list/global"
-			    ac-html-package-dir))
+	  (expand-file-name "html-attributes-list/global"
+			    ac-html-basic-source-dir))
 	 (this-attributes-file-name
-	  (format "html-stuff/html-attributes-list/%s" tag-string))
+	  (format "html-attributes-list/%s" tag-string))
 	 (this-attributes-file
 	  (expand-file-name this-attributes-file-name
-			    ac-html-package-dir))
+			    ac-html-basic-source-dir))
 	 (list-to-return ()))
 
     (if (file-exists-p global-attributes-file)
@@ -217,8 +234,8 @@
 
 (defmacro ac-html--attribute-documentation (attribute tag)
   `(let* ((where-to-find
-           (expand-file-name "html-stuff/html-attributes-short-docs"
-                             ac-html-package-dir))
+           (expand-file-name "html-attributes-short-docs"
+                             ac-html-basic-source-dir))
           (tag-string ,tag)
           (tag-doc-file-name (format "%s-%s" tag-string ,attribute))
           (global-doc-file-name (format "%s-%s" "global" ,attribute))
@@ -250,16 +267,16 @@ Those files may have documantation delimited by \" \" symbol."
 	 (attribute-string (ac-html--current-html-attribute))
 
 	 (this-global-attribute-file-name
-	  (format "html-stuff/html-attributes-complete/global-%s" attribute-string))
+	  (format "html-attributes-complete/global-%s" attribute-string))
 	 (this-global-attribute-file
 	  (expand-file-name this-global-attribute-file-name
-			    ac-html-package-dir))
+			    ac-html-basic-source-dir))
 
 	 (this-concrete-atribute-file-name
-	  (format "html-stuff/html-attributes-complete/%s-%s" tag-string attribute-string))
+	  (format "html-attributes-complete/%s-%s" tag-string attribute-string))
 	 (this-concrete-atribute-file
 	  (expand-file-name this-concrete-atribute-file-name
-			    ac-html-package-dir))
+			    ac-html-basic-source-dir))
 	 (list-to-return ()))
 
     (if (file-exists-p this-concrete-atribute-file)
