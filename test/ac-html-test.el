@@ -9,16 +9,26 @@ If file exist."
          (list-from-file (ac-html--load-list-from-file file-name)))
     (should (equal list-from-file '("foo" "bar" "baz")))))
 
+(defun test-suite-html-current-thing-scan (body)
+  "This test suite is for 
+`ac-html--current-html-tag'
+`ac-html--current-html-attribute'."
+  (unwind-protect
+      (progn
+        (with-temp-buffer
+          (insert "<html><head lang=\"\"\n\n lang=\"\"></head></html>")
+          (funcall body)))))
+
 (ert-deftest test-ac-html--current-html-tag ()
   "Test `ac-html--current-html-tag' correctly scan the tag user is typing on."
-  (with-temp-buffer
-    (insert "<html><head lang=\"\"\n\n lang=\"\"></head></html>")
-    (goto-char 20)
-    (should (equal (ac-html--current-html-tag) "head"))))
+  (test-suite-html-current-thing-scan
+   (lambda ()
+     (goto-char 20)
+     (should (equal (ac-html--current-html-tag) "head")))))
 
 (ert-deftest test-ac-html--current-html-attribute ()
   "Test `ac-html--current-html-attribute' correctly scan the attribute."
-  (with-temp-buffer
-    (insert "<input type=\"\"></input>")
-    (goto-char 14)
-    (should (equal (ac-html--current-html-attribute) "type"))))
+  (test-suite-html-current-thing-scan
+   (lambda ()
+     (goto-char 29)
+     (should (equal (ac-html--current-html-attribute) "lang")))))
