@@ -111,6 +111,18 @@
   (ac-html--load-list-from-file (expand-file-name "html-tag-list"
                                                   ac-html-basic-source-dir)))
 
+(defun ac-source--html-tag-documentation (symbol)
+  (let* ((where-to-find
+          (expand-file-name "html-tag-short-docs"
+                            ac-html-basic-source-dir))
+	 (doc-file (expand-file-name symbol where-to-find)))
+    (if (file-exists-p doc-file)
+	(progn
+	  (with-temp-buffer
+	    (insert-file-contents doc-file)
+	    (buffer-string)))
+      "Currently not documented.")))
+
 (defmacro ac-html--attribute-documentation (attribute tag)
   `(let* ((where-to-find
            (expand-file-name "html-attributes-short-docs"
@@ -170,36 +182,12 @@
 	 (tag-string (match-string 1)))
     tag-string))
 
-(defun ac-source-html-tag-candidates ()
-  ac-html-all-element-list)
-
-(defun ac-source-html-tag-documentation (symbol)
-  (let* ((where-to-find
-          (expand-file-name "html-tag-short-docs"
-                            ac-html-basic-source-dir))
-	 (doc-file (expand-file-name symbol where-to-find)))
-    (if (file-exists-p doc-file)
-	(progn
-	  (with-temp-buffer
-	    (insert-file-contents doc-file)
-	    (buffer-string)))
-      "Currently not documented.")))
-
-(defun ac-source-html-attribute-candidates ()
-  (ac-html--attribute-candidates (ac-html--current-html-tag)))
-
-(defun ac-source-html-attribute-documentation (symbol)
-  (ac-html--attribute-documentation symbol
-                                    (ac-html--current-html-tag)))
-
-(defun ac-source-html-attribute-value-candidates-internal ()
+(defun ac-source--html-values-internal (tag-string attribute-string)
   "Read html-stuff/html-attributes-complete/global-<ATTRIBUTE>
 and html-stuff/html-attributes-complete/<TAG>-<ATTRIBUTE> files
 
 Those files may have documantation delimited by \" \" symbol."
-  (let* ((tag-string (ac-html--current-html-tag))
-	 (attribute-string (ac-html--current-html-attribute))
-
+  (let* (
 	 (this-global-attribute-file-name
 	  (format "html-attributes-complete/global-%s" attribute-string))
 	 (this-global-attribute-file
@@ -223,13 +211,13 @@ Those files may have documantation delimited by \" \" symbol."
 		      (ac-html--load-list-from-file this-global-attribute-file))))
     list-to-return))
 
-(defun ac-source-html-attribute-value-candidates ()
-  (let ( (lines (ac-source-html-attribute-value-candidates-internal)) )
+(defun ac-source--html-attribute-values (tag-string attribute-string)
+  (let ( (lines (ac-source--html-values-internal tag-string attribute-string)) )
     (mapcar '(lambda(line)
                (replace-regexp-in-string "[ ].*" "" line))
             lines)))
 
-(defun ac-source-html-attribute-value-document (symbol)
+(defun ac-source--html-attribute-value-document (symbol tag-string attribute-string)
   (let* ( (word (if (symbolp symbol)
                     (symbol-name symbol)
                   symbol))
@@ -239,8 +227,28 @@ Those files may have documantation delimited by \" \" symbol."
                (when (>= (length line) len)
                  (when (string= word (substring line 0 (length word)))
                    (setq help (substring line (length word))))))
-            (ac-source-html-attribute-value-candidates-internal))
+            (ac-source--html-values-internal tag-string attribute-string))
       (replace-regexp-in-string "\\\\n" "\n" (substring help 1)))))
+
+;; ac-source functions
+
+(defun ac-source-html-tag-candidates ()
+  ac-html-all-element-list)
+
+(defun ac-source-html-attribute-candidates ()
+  (ac-html--attribute-candidates (ac-html--current-html-tag)))
+
+(defun ac-source-html-attribute-documentation (symbol)
+  (ac-html--attribute-documentation symbol
+                                    (ac-html--current-html-tag)))
+
+(defun ac-source-html-attribute-value-candidates ()
+  (ac-source--html-attribute-values
+   (ac-html--current-html-tag) (ac-html--current-html-attribute)))
+
+(defun ac-source-html-attribute-value-document (symbol)
+  (ac-source--html-attribute-value-document symbol
+                                            (ac-html--current-html-tag) (ac-html--current-html-attribute)))
 
 (defun ac-html-value-prefix ()
   (if (re-search-backward "\\w=[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
@@ -250,7 +258,7 @@ Those files may have documantation delimited by \" \" symbol."
   '((candidates . ac-source-html-tag-candidates)
     (prefix . "<\\(.*\\)")
     (symbol . "t")
-    (document . ac-source-html-tag-documentation)))
+    (document . ac-source--html-tag-documentation)))
 
 (defvar ac-source-html-attribute
   '((candidates . ac-source-html-attribute-candidates)
@@ -262,7 +270,8 @@ Those files may have documantation delimited by \" \" symbol."
   '((candidates . ac-source-html-attribute-value-candidates)
     (prefix . ac-html-value-prefix)
     (document . ac-source-html-attribute-value-document)
-    (symbol . "v")))
+    (symbol . "v")
+))
 
 (provide 'ac-html)
 ;;; ac-html.el ends here

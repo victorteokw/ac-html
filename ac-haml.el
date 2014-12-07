@@ -31,8 +31,17 @@
   (let* ((tag-search (save-excursion
                        (re-search-backward "%\\(\\w+\\)" nil t)))
          (tag-string (match-string 1)))
-    (message tag-string)
     tag-string))
+
+(defun ac-html--current-haml-attribute ()
+  "Return current html tag's attribute user is typing on."
+  (let* ((attr-search (save-excursion
+		       (re-search-backward "[^a-z-]:\\([a-z-]+\\)=" nil t)))
+	 (attr-string (match-string 1)))
+    attr-string))
+
+(defun ac-source-haml-attribute-values-candidates ()
+  (ac-html--attribute-candidates (ac-html--current-haml-tag)))
 
 (defun ac-source-haml-attribute-candidates ()
   (ac-html--attribute-candidates (ac-html--current-haml-tag)))
@@ -44,17 +53,38 @@
   (ac-html--attribute-documentation symbol
                                     (ac-html--current-haml-tag)))
 
+(defun ac-source-haml-value-candidates ()
+  (message "=>Tag: \"%s\" Attr \"%s\"" (ac-html--current-haml-tag) (ac-html--current-haml-attribute))
+   (ac-source--html-attribute-values
+    (ac-html--current-haml-tag) (ac-html--current-haml-attribute))
+  )
+
+(defun ac-source-haml-attribute-value-document (symbol)
+  (ac-source--html-attribute-value-document symbol
+                                            (ac-html--current-haml-tag) (ac-html--current-haml-attribute)))
+
+(defun ac-haml-value-prefix ()
+  (if (re-search-backward ":\\w+=[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
+      (match-beginning 2)))
+
 (defvar ac-source-haml-tag
   '((candidates . ac-source-haml-tag-candidates)
     (prefix . "%\\(.*\\)")
     (symbol . "t")
-    (document . ac-source-html-tag-documentation)))
+    (document . ac-source--html-tag-documentation)))
 
 (defvar ac-source-haml-attribute
   '((candidates . ac-source-haml-attribute-candidates)
     (prefix . ":\\(.*\\)")
     (symbol . "a")
     (document . ac-source-haml-attribute-documentation)))
+
+(defvar ac-source-haml-attribute-value
+  '((candidates . ac-source-haml-value-candidates)
+    (prefix . ac-haml-value-prefix)
+    (symbol . "v")
+    (document . ac-source-haml-attribute-value-document)
+    ))
 
 (provide 'ac-haml)
 ;;; ac-haml.el ends here
