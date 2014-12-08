@@ -226,8 +226,10 @@ Those files may have documantation delimited by \" \" symbol."
 
 (defun ac-source--html-attribute-values (tag-string attribute-string)
   (if (and ac-html-style-css
-	   (ac-css-prefix)
-	   (string= attribute-string "style"))
+	   (string= attribute-string "style")
+	   (<				; make sure that quote openned before ac-css-prefix
+	    (1+ (save-excursion (re-search-backward "\"" nil t)))
+	    (or (ac-css-prefix) 0)))	; TODO: how to compare numbers with possible nil?
       (mapcar '(lambda(css-item)	; if attribute is "style"
 		 (popup-make-item css-item
 				  :summary "CSS"))
