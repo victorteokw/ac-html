@@ -40,7 +40,7 @@
 (defun ac-html--current-jade-attribute ()
   "Return current html tag's attribute user is typing on."
   (let* ((attr-search (save-excursion
-		       (re-search-backward "[^a-z-]\\([a-z-]+\\)=" nil t)))
+		       (re-search-backward "[^a-z-]\\([a-z-]+\\) *=" nil t)))
 	 (attr-string (match-string 1)))
     attr-string))
 
@@ -68,7 +68,7 @@
 
 
 (defun ac-jade-value-prefix ()
-  (if (re-search-backward "\\w=[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
+  (if (re-search-backward "\\w *= *[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
       (match-beginning 2)))
 
 (defvar ac-source-jade-tag
