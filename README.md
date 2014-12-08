@@ -9,8 +9,6 @@ Vision
 ------
 Provide accurate and intelligent auto completion to HTML and css.
 
-Support slim.
-
 Add class source and auto complete class names.
 
 Add id source and auto complete id names.
@@ -39,6 +37,7 @@ Additionally you need to add these lines:
 ``` elisp
 (add-hook 'haml-mode-hook 'ac-haml-enable)
 (add-hook 'jade-mode-hook 'ac-jade-enable)
+(add-hook 'slim-mode-hook 'ac-slim-enable)
 ```
 
 ### More customization
@@ -69,7 +68,7 @@ and for example change popup face, below hint help you:
 
 ;; additionally you may want configure
 ;; ac-source-haml-tag ac-source-haml-attribute ac-source-haml-attribute-value
-;; and same for jade
+;; and same for jade nad slim sources.
 
 ;; if you use `web-mode` and set `(requires . 0)`, you may want disable
 ;; auto-quotinng of web-mode because of bug popup.
