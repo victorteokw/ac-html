@@ -20,7 +20,12 @@
 
 ;;; Commentary:
 
-;; If you are using haml-mode, you need require this file.
+;; Configuration:
+;;
+;; Add to hook `ac-haml-enable'
+;; 
+;; (add-hook 'haml-mode-hook 'ac-haml-enable)
+
 
 ;;; Code:
 
@@ -84,6 +89,19 @@
     (symbol . "v")
     (document . ac-source-haml-attribute-value-document)
     ))
+
+(defun ac-haml-enable ()
+  "Add ac-haml sources into ac-sources and enable auto-comple-mode"
+  (interactive)
+  (mapc (lambda (source)
+	  (if (not (memq source ac-sources))
+	      (add-to-list 'ac-sources source)))
+	'(ac-source-haml-attribute-value ac-source-haml-attribute ac-source-haml-tag))
+
+  ;; ac-source-haml-attribute-value complete in font-lock-string-face, must not be disabled
+  (make-local-variable 'ac-disable-faces)
+  (setq ac-disable-faces (remove 'font-lock-string-face ac-disable-faces))
+  (auto-complete-mode t))
 
 (provide 'ac-haml)
 ;;; ac-haml.el ends here

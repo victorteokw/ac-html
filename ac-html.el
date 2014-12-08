@@ -24,19 +24,23 @@
 ;;; Commentary:
 
 ;; Configuration:
-;; Add these lines
-;; (add-to-list 'ac-sources 'ac-source-html-attribute-value)
-;; (add-to-list 'ac-sources 'ac-source-html-tag)
-;; (add-to-list 'ac-sources 'ac-source-html-attribute)
+;;
+;; Add to hook `ac-html-enable'
+;; 
+;; (add-hook 'html-mode-hook 'ac-html-enable)
+;;
 ;; If you are using web-mode:
-;; Additionally you need to add these lines:
+;;
 ;; (add-to-list 'web-mode-ac-sources-alist
-;;              '("html" . (ac-source-html-attribute-value
+;;              '("html" . (
+;;                          ;; attribute-value better to be first
+;;                          ac-source-html-attribute-value
 ;;                          ac-source-html-tag
 ;;                          ac-source-html-attribute)))
-;; If you are using haml-mode:
-;; use `ac-source-haml-tag' and `ac-source-haml-attribute'
-
+;;
+;; `ac-html-enable' remove from list ac-disable-faces 'font-lock-string-face,
+;; so if you wish manually add ac-source-html-attribute-value, etc, you may need
+;; customize ac-disable-faces too.
 ;;; Code:
 
 (require 'auto-complete)
@@ -272,6 +276,19 @@ Those files may have documantation delimited by \" \" symbol."
     (document . ac-source-html-attribute-value-document)
     (symbol . "v")
 ))
+
+(defun ac-html-enable ()
+  "Add ac-html sources into ac-sources and enable auto-comple-mode"
+  (interactive)
+  (mapc (lambda (source)
+	  (if (not (memq source ac-sources))
+	      (add-to-list 'ac-sources source)))
+	'(ac-source-html-attribute-value ac-source-html-attribute ac-source-html-tag))
+
+  ;; ac-source-jade-attribute-value complete in font-lock-string-face, must not be disabled
+  (make-local-variable 'ac-disable-faces)
+  (setq ac-disable-faces (remove 'font-lock-string-face ac-disable-faces))
+  (auto-complete-mode t))
 
 (provide 'ac-html)
 ;;; ac-html.el ends here
