@@ -22,9 +22,7 @@ Usage
 
 Add these lines
 ``` elisp
-(add-to-list 'ac-sources 'ac-source-html-attribute-value)
-(add-to-list 'ac-sources 'ac-source-html-tag)
-(add-to-list 'ac-sources 'ac-source-html-attribute)
+(add-hook 'html-mode-hook 'ac-html-enable)
 ```
 
 ### If you are using web-mode:
@@ -36,8 +34,12 @@ Additionally you need to add these lines:
                          ac-source-html-attribute)))
 ```
 
-### If you are using haml-mode:
-use \`ac-source-haml-tag' and \`ac-source-haml-attribute'
+### If you are using haml-mode and/or jade-mode:
+Additionally you need to add these lines:
+``` elisp
+(add-hook 'haml-mode-hook 'ac-haml-enable)
+(add-hook 'jade-mode-hook 'ac-jade-enable)
+```
 
 ### More customization
 
@@ -64,7 +66,11 @@ and for example change popup face, below hint help you:
          (candidate-face . your-cool-face)
          (symbol . "VAL")
          (requires . 0)) ac-source-html-attribute-value))
-         
+
+;; additionally you may want configure
+;; ac-source-haml-tag ac-source-haml-attribute ac-source-haml-attribute-value
+;; and same for jade
+
 ;; if you use `web-mode` and set `(requires . 0)`, you may want disable
 ;; auto-quotinng of web-mode because of bug popup.
 ;; `smartparens-mode` as example of auto-pair quote may be used.
