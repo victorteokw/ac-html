@@ -2,8 +2,6 @@
 
 (require 'ac-haml)
 
-(setq ac-html-basic-source-dir (expand-file-name "sources" fixture-dir))
-
 (defun test-suite-haml-current-thing-scan (body)
   "This test suite is for 
 `ac-html--current-haml-tag'."
@@ -24,5 +22,5 @@
   "Test `ac-source-haml-attribute-candidates' return correctly."
   (test-suite-haml-current-thing-scan
    (lambda ()
-     (should (equal (ac-source-haml-attribute-candidates)
-                    '("foo" "bar" "baz" "onundo" "onunload"))))))
+     (should (equal (nth 2 (ac-source-haml-attribute-candidates))
+                    "contenteditable")))))

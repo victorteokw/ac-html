@@ -1,15 +1,16 @@
 (require 'ac-html)
 
-(setq ac-html-basic-source-dir (expand-file-name "sources" fixture-dir))
-
 ;;; Core test
 
 (ert-deftest test-ac-html--load-list-from-file ()
   "Test `ac-html--load-list-from-file' loads the list separated by \\n.
 If file exist."
-  (let* ((file-name (expand-file-name "list.txt" fixture-dir))
+  (let* ((file-name (expand-file-name "html-tag-list"
+                                      ac-html-basic-source-dir))
          (list-from-file (ac-html--load-list-from-file file-name)))
-    (should (equal list-from-file '("foo" "bar" "baz")))))
+    (should (equal (nth 0 list-from-file) "a"))
+    (should (equal (nth 1 list-from-file) "abbr"))
+    (should (equal (last list-from-file 2) '("wbr" "xmp")))))
 
 (ert-deftest test-ac-html-all-element-list ()
   "Test the array correct or not."

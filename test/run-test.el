@@ -1,7 +1,5 @@
 (defvar ac-html-test-dir (file-name-directory load-file-name))
 (defvar ac-html-root-dir (append ac-html-test-dir ".."))
-(defvar fixture-dir (expand-file-name "fixtures" ac-html-test-dir))
-
 
 (mapc (lambda (p)
         (add-to-list 'load-path p))
