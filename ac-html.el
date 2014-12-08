@@ -44,6 +44,7 @@
 ;;; Code:
 
 (require 'auto-complete)
+(require 'auto-complete-config)
 
 (defconst ac-html-package-dir (file-name-directory load-file-name)
   "The directory where `ac-html' package exists.")
@@ -63,6 +64,12 @@
   "Extend through this custom variable."
   :type '(repeat symbol)
   :group 'auto-complete-html)
+
+(defcustom ac-html-style-css t
+  "Enable style attribute CSS autocomplete.
+If not nil no need 'ac-source-css-property in web-mode-ac-sources-alist for web-mode (\"html\" list dot pair)"
+  :group 'auto-complete-html
+  :type 'boolean)
 
 ;;; Variables
 
@@ -216,10 +223,17 @@ Those files may have documantation delimited by \" \" symbol."
     list-to-return))
 
 (defun ac-source--html-attribute-values (tag-string attribute-string)
-  (let ( (lines (ac-source--html-values-internal tag-string attribute-string)) )
-    (mapcar '(lambda(line)
-               (replace-regexp-in-string "[ ].*" "" line))
-            lines)))
+  (if (and ac-html-style-css
+	   (ac-css-prefix)
+	   (string= attribute-string "style"))
+      (mapcar '(lambda(css-item)	; if attribute is "style"
+		 (popup-make-item css-item
+				  :summary "CSS"))
+	      (ac-css-property-candidates))
+    (let ( (lines (ac-source--html-values-internal tag-string attribute-string)) )
+      (mapcar '(lambda(line)
+		 (replace-regexp-in-string "[ ].*" "" line))
+	      lines))))
 
 (defun ac-source--html-attribute-value-document (symbol tag-string attribute-string)
   (let* ( (word (if (symbolp symbol)
