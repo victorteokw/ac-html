@@ -54,7 +54,6 @@
                                     (ac-html--current-haml-tag)))
 
 (defun ac-source-haml-value-candidates ()
-  (message "=>Tag: \"%s\" Attr \"%s\"" (ac-html--current-haml-tag) (ac-html--current-haml-attribute))
    (ac-source--html-attribute-values
     (ac-html--current-haml-tag) (ac-html--current-haml-attribute))
   )
