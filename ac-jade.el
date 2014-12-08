@@ -44,9 +44,6 @@
 	 (attr-string (match-string 1)))
     attr-string))
 
-(defun ac-source-jade-attribute-values-candidates ()
-  (ac-html--attribute-candidates (ac-html--current-jade-tag)))
-
 (defun ac-source-jade-attribute-candidates ()
   (ac-html--attribute-candidates (ac-html--current-jade-tag)))
 

@@ -45,9 +45,6 @@
 	 (attr-string (match-string 1)))
     attr-string))
 
-(defun ac-source-haml-attribute-values-candidates ()
-  (ac-html--attribute-candidates (ac-html--current-haml-tag)))
-
 (defun ac-source-haml-attribute-candidates ()
   (ac-html--attribute-candidates (ac-html--current-haml-tag)))
 
