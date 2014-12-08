@@ -45,6 +45,7 @@
 
 (require 'auto-complete)
 (require 'auto-complete-config)
+(require 'cl)
 
 (defconst ac-html-package-dir (file-name-directory load-file-name)
   "The directory where `ac-html' package exists.")
@@ -107,6 +108,9 @@ If not nil no need 'ac-source-css-property in web-mode-ac-sources-alist for web-
 (defvar ac-html-user-defined-id-list
   '())
 
+(defvar ac-html-string-check-faces '(font-lock-string-face web-mode-html-attr-value-face)
+  "List of string faces")
+
 ;;; Functions
 
 (defun ac-html--load-list-from-file (filepath)
@@ -156,9 +160,16 @@ If not nil no need 'ac-source-css-property in web-mode-ac-sources-alist for web-
                                    (buffer-string)))))
      doc-to-return))
 
+(defun ac-html--check-string-face ()
+  "t if text's face(s) at point is in `ac-html-string-check-faces'."
+  (let ((faces (get-text-property (point) 'face)))
+    (if (listp faces) 			; slim-mode define list of string-face (bug), so intersect
+	(intersection faces ac-html-string-check-faces)
+      (memq faces ac-html-string-check-faces) ;faces is atom
+      )))
+
 (defun ac-html--attribute-candidates (source)
-  (unless (eq (get-text-property (point) 'face)
-	      'font-lock-string-face)
+  (unless (ac-html--check-string-face)
     (let* ((tag-string source)
 	   (global-attributes-file
 	    (expand-file-name "html-attributes-list/global"
