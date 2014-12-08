@@ -41,7 +41,7 @@
 (defun ac-html--current-haml-attribute ()
   "Return current html tag's attribute user is typing on."
   (let* ((attr-search (save-excursion
-		       (re-search-backward "[^a-z-]:\\([a-z-]+\\)=" nil t)))
+		       (re-search-backward "[^a-z-]\\([a-z-]+\\) *=" nil t)))
 	 (attr-string (match-string 1)))
     attr-string))
 
@@ -59,16 +59,17 @@
                                     (ac-html--current-haml-tag)))
 
 (defun ac-source-haml-value-candidates ()
-   (ac-source--html-attribute-values
-    (ac-html--current-haml-tag) (ac-html--current-haml-attribute))
-  )
+  (ac-source--html-attribute-values
+   (ac-html--current-haml-tag) (ac-html--current-haml-attribute)))
 
 (defun ac-source-haml-attribute-value-document (symbol)
   (ac-source--html-attribute-value-document symbol
                                             (ac-html--current-haml-tag) (ac-html--current-haml-attribute)))
 
 (defun ac-haml-value-prefix ()
-  (if (re-search-backward ":\\w+=[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
+  ;; %foo{ bar => ""}
+  ;; %foo( :bar = "")
+  (if (re-search-backward "\\w+ *=[>]? *[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
       (match-beginning 2)))
 
 (defvar ac-source-haml-tag
