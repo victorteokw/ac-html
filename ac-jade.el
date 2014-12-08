@@ -75,23 +75,19 @@
   '((candidates . ac-source-jade-tag-candidates)
     (prefix . "^[\t ]*\\(.*\\)")
     (symbol . "t")
-    (requires . 0)
     (document . ac-source--html-tag-documentation)))
 
 (defvar ac-source-jade-attribute
   '((candidates . ac-source-jade-attribute-candidates)
     (prefix . "\\(?:,\\|(\\)[ ]*\\(.*\\)")
     (symbol . "a")
-    (requires . 0)
     (document . ac-source-jade-attribute-documentation)
 ))
 
 (defvar ac-source-jade-attribute-value
   '((candidates . ac-source-jade-value-candidates)
-    ;;(prefix . "[\"`]\\(.*\\)")
     (prefix . ac-jade-value-prefix)
     (symbol . "v")
-    (requires . 0)
     (document . ac-source-jade-attribute-value-document)
     ))
 
