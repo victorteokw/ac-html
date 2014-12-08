@@ -157,27 +157,29 @@ If not nil no need 'ac-source-css-property in web-mode-ac-sources-alist for web-
      doc-to-return))
 
 (defun ac-html--attribute-candidates (source)
-  (let* ((tag-string source)
-	 (global-attributes-file
-	  (expand-file-name "html-attributes-list/global"
-			    ac-html-basic-source-dir))
-	 (this-attributes-file-name
-	  (format "html-attributes-list/%s" tag-string))
-	 (this-attributes-file
-	  (expand-file-name this-attributes-file-name
-			    ac-html-basic-source-dir))
-	 (list-to-return ()))
+  (unless (eq (get-text-property (point) 'face)
+	      'font-lock-string-face)
+    (let* ((tag-string source)
+	   (global-attributes-file
+	    (expand-file-name "html-attributes-list/global"
+			      ac-html-basic-source-dir))
+	   (this-attributes-file-name
+	    (format "html-attributes-list/%s" tag-string))
+	   (this-attributes-file
+	    (expand-file-name this-attributes-file-name
+			      ac-html-basic-source-dir))
+	   (list-to-return ()))
 
-    (if (file-exists-p global-attributes-file)
-	(setq list-to-return
-	      (append list-to-return
-		      (ac-html--load-list-from-file global-attributes-file))))
+      (if (file-exists-p global-attributes-file)
+	  (setq list-to-return
+		(append list-to-return
+			(ac-html--load-list-from-file global-attributes-file))))
 
-    (if (file-exists-p this-attributes-file)
-	(setq list-to-return
-	      (append list-to-return
-		      (ac-html--load-list-from-file this-attributes-file))))
-    list-to-return))
+      (if (file-exists-p this-attributes-file)
+	  (setq list-to-return
+		(append list-to-return
+			(ac-html--load-list-from-file this-attributes-file))))
+      list-to-return)))
 
 (defun ac-html--current-html-tag ()
   "Return current html tag user is typing on."
