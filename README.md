@@ -32,8 +32,8 @@ Additionally you need to add these lines:
                          ac-source-html-attribute)))
 ```
 
-### If you are using haml-mode and/or jade-mode:
-Additionally you need to add these lines:
+### Support for template languages:
+You may selectively add:
 ``` elisp
 (add-hook 'haml-mode-hook 'ac-haml-enable)
 (add-hook 'jade-mode-hook 'ac-jade-enable)
@@ -85,7 +85,7 @@ Create `.tern-project` file in your project directory with `browser`:
 ```json
 {
   "libs": [
-    "browser",
+    "browser"
   ],
     "plugins": {
     }
@@ -121,4 +121,5 @@ It may contain some bugs.
 Contribution
 ------
 Any contribution is welcome.
+
 Requested features and bad bugs are listed in issues.
