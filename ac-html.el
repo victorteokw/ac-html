@@ -185,43 +185,24 @@ tail - filename"
 					  ))
 	   (ac-html--get-files "html-tag-list"))))
 
-(defvar ac-html-all-element-list
-  (ac-html--load-list-from-file (expand-file-name "html-tag-list"
-                                                   ac-html-basic-source-dir)))
-
 (defun ac-source--html-tag-documentation (symbol)
-  (let* ((where-to-find
-          (expand-file-name "html-tag-short-docs"
-                            ac-html-basic-source-dir))
-	 (doc-file (expand-file-name symbol where-to-find)))
-    (if (file-exists-p doc-file)
-	(progn
-	  (with-temp-buffer
-	    (insert-file-contents doc-file)
-	    (buffer-string)))
+  (let ((doc (ac-html--find-file (concat "html-tag-short-docs/" symbol))))
+    (if doc
+	doc
       "Currently not documented.")))
 
-(defmacro ac-html--attribute-documentation (attribute tag)
-  `(let* ((where-to-find
-           (expand-file-name "html-attributes-short-docs"
-                             ac-html-basic-source-dir))
-          (tag-string ,tag)
-          (tag-doc-file-name (format "%s-%s" tag-string ,attribute))
-          (global-doc-file-name (format "%s-%s" "global" ,attribute))
-          (tag-doc-file (expand-file-name tag-doc-file-name where-to-find))
-          (global-doc-file
-           (expand-file-name global-doc-file-name where-to-find))
-          (doc-to-return ""))
-     (if (file-exists-p tag-doc-file)
-         (setq doc-to-return (with-temp-buffer
-                               (insert-file-contents tag-doc-file)
-                               (buffer-string))))
-     (if (string-equal doc-to-return "")
-         (if (file-exists-p global-doc-file)
-             (setq doc-to-return (with-temp-buffer
-                                   (insert-file-contents global-doc-file)
-                                   (buffer-string)))))
-     doc-to-return))
+(defun ac-html--attribute-documentation (attribute tag)
+  (let* ((doc-file (format "html-attributes-short-docs/%s-%s" tag attribute))
+	 (doc (ac-html--find-file doc-file)))
+    (if doc
+	doc
+      (progn
+	(setq doc-file (format "html-attributes-short-docs/global-%s" attribute))
+	(setq doc (ac-html--find-file doc-file))
+	(if doc
+	    doc
+	  "Currently not documented.")
+	))))
 
 (defun ac-html--check-string-face ()
   "t if text's face(s) at point is in `ac-html-string-check-faces'."
