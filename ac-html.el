@@ -262,7 +262,6 @@ Those files may have documantation delimited by \" \" symbol."
          (tag-string (match-string 1)))
     tag-string))
 
-
 ;; ac-source functions
 
 (defun ac-source-html-tag-candidates ()

@@ -3,8 +3,7 @@
 (require 'ac-haml)
 
 (defun test-suite-haml-current-thing-scan (body)
-  "This test suite is for 
-`ac-html--current-haml-tag'."
+  "This test suite is for ac-haml."
   (unwind-protect
       (progn
         (with-temp-buffer
