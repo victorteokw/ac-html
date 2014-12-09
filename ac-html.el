@@ -168,6 +168,14 @@ tail - filename"
 	      (popup-make-item item :summary summary))
 	  items))
 
+(defun ac-html--find-file (filename)
+  "Find and read FILENAME from `ac-html-source-dirs'"
+  (let ((file (cdr (car (ac-html--get-files filename))))) ; first file that exists
+    (when file
+      (with-temp-buffer
+	(insert-file-contents file)
+	(buffer-string)))))
+
 (defun ac-html--tags ()
   (ac-html--flatten
    (mapcar #'(lambda (alist)
