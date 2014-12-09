@@ -138,21 +138,23 @@ If not nil no need 'ac-source-css-property in web-mode-ac-sources-alist for web-
 Return alist:
 head - is car of `ac-html-source-dirs', a name of html-stuff
 tail - filename"
-  (mapcar #'(lambda (alist)
-	      (let* ((path (cdr alist)))
-		(setq path 
-		      (cond ((stringp path) path)
-			    ((and (symbolp path)
-				  (boundp path)
-				  (stringp (symbol-value path)))
-			     (symbol-value path))
-			    (t
-			     (error "[ac-html] invalid element %s in `ac-html-source-dirs'" path))))
-		(setq path (expand-file-name file-name path))
-		(when (file-exists-p path)
-		  (cons
-		   (car alist) path))))
-	  ac-html-source-dirs))
+  (let (return-files)			; acumulate no nil here
+    (mapc  #'(lambda (alist)
+		 (let* ((path (cdr alist)))
+		   (setq path 
+			 (cond ((stringp path) path)
+			       ((and (symbolp path)
+				     (boundp path)
+				     (stringp (symbol-value path)))
+				(symbol-value path))
+			       (t
+				(error "[ac-html] invalid element %s in `ac-html-source-dirs'" path))))
+		   (setq path (expand-file-name file-name path))
+		   (when (file-exists-p path)
+		     (add-to-list 'return-files (cons (car alist) path))
+		     )))
+	   ac-html-source-dirs)
+    return-files))
 
 ;; http://rosettacode.org/wiki/Flatten_a_list can't find elisp ready same func
 (defun ac-html--flatten (structure)
