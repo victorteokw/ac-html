@@ -55,7 +55,8 @@
   "The directory where basic source of `ac-html' exists.")
 
 (defun ac-html-user-cache-dir ()
-  "Directory of user cache dir."
+  "Directory of user cache dir.
+If not exist, automatically create."
   (let ((cache-dir (expand-file-name ".ac-html" user-emacs-directory)))
     (unless (file-exists-p cache-dir)
       (make-directory cache-dir))
@@ -66,6 +67,16 @@
 Currently, use projectile to find project dir."
   (if (featurep 'projectile)
       (ignore-errors (projectile-project-root))))
+
+(defun ac-html-user-current-project-cache-dir ()
+  "User cache dir for current project.
+If not exist, automatically create."
+  (let ((this-cache-dir (expand-file-name
+                         (md5 (ac-html-user-current-project-dir))
+                         (ac-html-user-cache-dir))))
+    (unless (file-exists-p this-cache-dir)
+      (make-directory this-cache-dir))
+    this-cache-dir))
 
 (defvar ac-html-html-modes '(web-mode html-mode haml-mode
                                       jade-mode slim-mode))
