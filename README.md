@@ -118,6 +118,8 @@ Issues
 ------
 It may contain some bugs.
 
+If you find some bug, please report it via issues.
+
 Contribution
 ------
 Any contribution is welcome.
