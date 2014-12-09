@@ -26,7 +26,7 @@
 ;; Configuration:
 ;;
 ;; Add to hook `ac-html-enable'
-;; 
+;;
 ;; (add-hook 'html-mode-hook 'ac-html-enable)
 ;;
 ;; If you are using web-mode:
@@ -100,8 +100,6 @@ If not nil no need 'ac-source-css-property in web-mode-ac-sources-alist for web-
    "a" "bdo" "br" "img" "map" "object" "q" "script" "span" "sub" "sup"
    "button" "input" "label" "select" "textarea"))
 
-
-
 (defvar ac-html-user-defined-class-list
   '())
 
@@ -117,10 +115,10 @@ If not nil no need 'ac-source-css-property in web-mode-ac-sources-alist for web-
   "Return a list separated by \\n from FILEPATH."
   (with-current-buffer (find-file-noselect filepath)
     (split-string (save-restriction
-		    (widen)
-		    (buffer-substring-no-properties
-		     (point-min) (point-max)))
-		  "\n" t)))
+                    (widen)
+                    (buffer-substring-no-properties
+                     (point-min) (point-max)))
+                  "\n" t)))
 
 (defvar ac-html-all-element-list
   (ac-html--load-list-from-file (expand-file-name "html-tag-list"
@@ -130,12 +128,12 @@ If not nil no need 'ac-source-css-property in web-mode-ac-sources-alist for web-
   (let* ((where-to-find
           (expand-file-name "html-tag-short-docs"
                             ac-html-basic-source-dir))
-	 (doc-file (expand-file-name symbol where-to-find)))
+         (doc-file (expand-file-name symbol where-to-find)))
     (if (file-exists-p doc-file)
-	(progn
-	  (with-temp-buffer
-	    (insert-file-contents doc-file)
-	    (buffer-string)))
+        (progn
+          (with-temp-buffer
+            (insert-file-contents doc-file)
+            (buffer-string)))
       "Currently not documented.")))
 
 (defmacro ac-html--attribute-documentation (attribute tag)
@@ -163,48 +161,33 @@ If not nil no need 'ac-source-css-property in web-mode-ac-sources-alist for web-
 (defun ac-html--check-string-face ()
   "t if text's face(s) at point is in `ac-html-string-check-faces'."
   (let ((faces (get-text-property (point) 'face)))
-    (if (listp faces) 			; slim-mode define list of string-face (bug), so intersect
-	(intersection faces ac-html-string-check-faces)
+    (if (listp faces)                   ; slim-mode define list of string-face (bug), so intersect
+        (intersection faces ac-html-string-check-faces)
       (memq faces ac-html-string-check-faces) ;faces is atom
       )))
 
-(defun ac-html--attribute-candidates (source)
+(defun ac-html--attribute-candidates (tag-string)
   (unless (ac-html--check-string-face)
-    (let* ((tag-string source)
-	   (global-attributes-file
-	    (expand-file-name "html-attributes-list/global"
-			      ac-html-basic-source-dir))
-	   (this-attributes-file-name
-	    (format "html-attributes-list/%s" tag-string))
-	   (this-attributes-file
-	    (expand-file-name this-attributes-file-name
-			      ac-html-basic-source-dir))
-	   (list-to-return ()))
+    (let* ((global-attributes-file
+            (expand-file-name "html-attributes-list/global"
+                              ac-html-basic-source-dir))
+           (this-attributes-file-name
+            (format "html-attributes-list/%s" tag-string))
+           (this-attributes-file
+            (expand-file-name this-attributes-file-name
+                              ac-html-basic-source-dir))
+           (list-to-return ()))
 
       (if (file-exists-p global-attributes-file)
-	  (setq list-to-return
-		(append list-to-return
-			(ac-html--load-list-from-file global-attributes-file))))
+          (setq list-to-return
+                (append list-to-return
+                        (ac-html--load-list-from-file global-attributes-file))))
 
       (if (file-exists-p this-attributes-file)
-	  (setq list-to-return
-		(append list-to-return
-			(ac-html--load-list-from-file this-attributes-file))))
+          (setq list-to-return
+                (append list-to-return
+                        (ac-html--load-list-from-file this-attributes-file))))
       list-to-return)))
-
-(defun ac-html--current-html-tag ()
-  "Return current html tag user is typing on."
-  (let* ((tag-search (save-excursion
-		       (re-search-backward "<\\(\\w+\\)[[:space:]]+" nil t)))
-	 (tag-string (match-string 1)))
-    tag-string))
-
-(defun ac-html--current-html-attribute ()
-  "Return current html tag's attribute user is typing on."
-  (let* ((tag-search (save-excursion
-		       (re-search-backward "[^a-z-]\\([a-z-]+\\)=" nil t)))
-	 (tag-string (match-string 1)))
-    tag-string))
 
 (defun ac-source--html-values-internal (tag-string attribute-string)
   "Read html-stuff/html-attributes-complete/global-<ATTRIBUTE>
@@ -212,43 +195,43 @@ and html-stuff/html-attributes-complete/<TAG>-<ATTRIBUTE> files
 
 Those files may have documantation delimited by \" \" symbol."
   (let* (
-	 (this-global-attribute-file-name
-	  (format "html-attributes-complete/global-%s" attribute-string))
-	 (this-global-attribute-file
-	  (expand-file-name this-global-attribute-file-name
-			    ac-html-basic-source-dir))
+         (this-global-attribute-file-name
+          (format "html-attributes-complete/global-%s" attribute-string))
+         (this-global-attribute-file
+          (expand-file-name this-global-attribute-file-name
+                            ac-html-basic-source-dir))
 
-	 (this-concrete-atribute-file-name
-	  (format "html-attributes-complete/%s-%s" tag-string attribute-string))
-	 (this-concrete-atribute-file
-	  (expand-file-name this-concrete-atribute-file-name
-			    ac-html-basic-source-dir))
-	 (list-to-return ()))
+         (this-concrete-atribute-file-name
+          (format "html-attributes-complete/%s-%s" tag-string attribute-string))
+         (this-concrete-atribute-file
+          (expand-file-name this-concrete-atribute-file-name
+                            ac-html-basic-source-dir))
+         (list-to-return ()))
 
     (if (file-exists-p this-concrete-atribute-file)
-	(setq list-to-return
-	      (append list-to-return
-		      (ac-html--load-list-from-file this-concrete-atribute-file))))
+        (setq list-to-return
+              (append list-to-return
+                      (ac-html--load-list-from-file this-concrete-atribute-file))))
     (if (file-exists-p this-global-attribute-file)
-	(setq list-to-return
-	      (append list-to-return
-		      (ac-html--load-list-from-file this-global-attribute-file))))
+        (setq list-to-return
+              (append list-to-return
+                      (ac-html--load-list-from-file this-global-attribute-file))))
     list-to-return))
 
 (defun ac-source--html-attribute-values (tag-string attribute-string)
   (if (and ac-html-style-css
-	   (string= attribute-string "style")
-	   (<				; make sure that quote openned before ac-css-prefix
-	    (1+ (save-excursion (re-search-backward "\"" nil t)))
-	    (or (ac-css-prefix) 0)))	; TODO: how to compare numbers with possible nil?
+           (string= attribute-string "style")
+           (<				; make sure that quote openned before ac-css-prefix
+            (1+ (save-excursion (re-search-backward "\"" nil t)))
+            (or (ac-css-prefix) 0)))	; TODO: how to compare numbers with possible nil?
       (mapcar '(lambda(css-item)	; if attribute is "style"
-		 (popup-make-item css-item
-				  :summary "CSS"))
-	      (ac-css-property-candidates))
+                 (popup-make-item css-item
+                                  :summary "CSS"))
+              (ac-css-property-candidates))
     (let ( (lines (ac-source--html-values-internal tag-string attribute-string)) )
       (mapcar '(lambda(line)
-		 (replace-regexp-in-string "[ ].*" "" line))
-	      lines))))
+                 (replace-regexp-in-string "[ ].*" "" line))
+              lines))))
 
 (defun ac-source--html-attribute-value-document (symbol tag-string attribute-string)
   (let* ( (word (if (symbolp symbol)
@@ -262,6 +245,23 @@ Those files may have documantation delimited by \" \" symbol."
                    (setq help (substring line (length word))))))
             (ac-source--html-values-internal tag-string attribute-string))
       (replace-regexp-in-string "\\\\n" "\n" (substring help 1)))))
+
+;;; auto complete HTML for html-mode and web-mode
+
+(defun ac-html--current-html-tag ()
+  "Return current html tag user is typing on."
+  (let* ((tag-search (save-excursion
+                       (re-search-backward "<\\(\\w+\\)[[:space:]]+" nil t)))
+         (tag-string (match-string 1)))
+    tag-string))
+
+(defun ac-html--current-html-attribute ()
+  "Return current html tag's attribute user is typing on."
+  (let* ((tag-search (save-excursion
+                       (re-search-backward "[^a-z-]\\([a-z-]+\\)=" nil t)))
+         (tag-string (match-string 1)))
+    tag-string))
+
 
 ;; ac-source functions
 
@@ -307,12 +307,12 @@ Those files may have documantation delimited by \" \" symbol."
 ))
 
 (defun ac-html-enable ()
-  "Add ac-html sources into ac-sources and enable auto-comple-mode"
+  "Add ac-html sources into ac-sources and enable auto-comple-mode."
   (interactive)
   (mapc (lambda (source)
-	  (if (not (memq source ac-sources))
-	      (add-to-list 'ac-sources source)))
-	'(ac-source-html-attribute-value ac-source-html-attribute ac-source-html-tag))
+          (if (not (memq source ac-sources))
+              (add-to-list 'ac-sources source)))
+        '(ac-source-html-attribute-value ac-source-html-attribute ac-source-html-tag))
 
   ;; ac-source-jade-attribute-value complete in font-lock-string-face, must not be disabled
   (make-local-variable 'ac-disable-faces)
