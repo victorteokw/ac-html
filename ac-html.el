@@ -212,29 +212,22 @@ tail - filename"
       (memq faces ac-html-string-check-faces) ;faces is atom
       )))
 
-(defun ac-html--attribute-candidates (source)
+(defun ac-html--attribute-candidates (tag-string)
+  "Attribute candidates. Summary \"G\" if global."
   (unless (ac-html--check-string-face)
-    (let* ((tag-string source)
-	   (global-attributes-file
-	    (expand-file-name "html-attributes-list/global"
-			      ac-html-basic-source-dir))
-	   (this-attributes-file-name
-	    (format "html-attributes-list/%s" tag-string))
-	   (this-attributes-file
-	    (expand-file-name this-attributes-file-name
-			      ac-html-basic-source-dir))
-	   (list-to-return ()))
-
-      (if (file-exists-p global-attributes-file)
-	  (setq list-to-return
-		(append list-to-return
-			(ac-html--load-list-from-file global-attributes-file))))
-
-      (if (file-exists-p this-attributes-file)
-	  (setq list-to-return
-		(append list-to-return
-			(ac-html--load-list-from-file this-attributes-file))))
-      list-to-return)))
+    (let* ((items
+	    (mapcar #'(lambda (alist)
+			(ac-html--make-popup-items (concat (car alist) ", G")
+						   (ac-html--load-list-from-file (cdr alist))
+						   ))
+		    (ac-html--get-files "html-attributes-list/global"))))
+      (add-to-list 'items
+		   (mapcar #'(lambda (alist)
+			       (ac-html--make-popup-items (car alist)
+							  (ac-html--load-list-from-file (cdr alist))
+							  ))
+			   (ac-html--get-files (concat "html-attributes-list/" tag-string))))     
+      (ac-html--flatten items))))
 
 (defun ac-html--current-html-tag ()
   "Return current html tag user is typing on."
