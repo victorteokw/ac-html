@@ -61,9 +61,19 @@
   :group 'auto-complete
   :prefix "ac-html-")
 
-(defcustom ac-html-source-dirs '(ac-html-basic-source-dir)
-  "Extend through this custom variable."
-  :type '(repeat symbol)
+
+(defvar ac-html-installed-html-stuff nil)
+(setq ac-html-installed-html-stuff
+      (when load-file-name
+        (concat (file-name-directory load-file-name) "html-stuff")))
+
+(defcustom ac-html-source-dirs
+  '(
+    ("html" . ac-html-installed-html-stuff)
+    ("test" . "~/work/tests/my-html-stuff")
+    )
+  "Alist specifying html stuff name, and directory."
+  :type 'alist
   :group 'auto-complete-html)
 
 (defcustom ac-html-style-css t
@@ -122,9 +132,52 @@ If not nil no need 'ac-source-css-property in web-mode-ac-sources-alist for web-
 		     (point-min) (point-max)))
 		  "\n" t)))
 
+(defun ac-html--get-files (file-name)
+  "Alist of all expanded filename that exists in `ac-html-source-dirs' dirs.
+
+Return alist:
+head - is car of `ac-html-source-dirs', a name of html-stuff
+tail - filename"
+  (mapcar #'(lambda (alist)
+	      (let* ((path (cdr alist)))
+		(setq path 
+		      (cond ((stringp path) path)
+			    ((and (symbolp path)
+				  (boundp path)
+				  (stringp (symbol-value path)))
+			     (symbol-value path))
+			    (t
+			     (error "[ac-html] invalid element %s in `ac-html-source-dirs'" path))))
+		(setq path (expand-file-name file-name path))
+		(when (file-exists-p path)
+		  (cons
+		   (car alist) path))))
+	  ac-html-source-dirs))
+
+;; http://rosettacode.org/wiki/Flatten_a_list can't find elisp ready same func
+(defun ac-html--flatten (structure)
+  (cond ((null structure) nil)
+        ((atom structure) (list structure))
+        (t (mapcan #'ac-html--flatten structure))))
+
+(defun ac-html--make-popup-items (summary items)
+  "Make popup-item for each item with summary SUMMARY"
+  (mapcar #'(lambda (item)
+	      (popup-make-item item :summary summary))
+	  items))
+
+(defun ac-html--tags ()
+  (ac-html--flatten
+   (mapcar #'(lambda (alist)
+	       ;;(ac-html--load-list-from-file (cdr alist)))
+	       (ac-html--make-popup-items (car alist)
+					  (ac-html--load-list-from-file (cdr alist))
+					  ))
+	   (ac-html--get-files "html-tag-list"))))
+
 (defvar ac-html-all-element-list
   (ac-html--load-list-from-file (expand-file-name "html-tag-list"
-                                                  ac-html-basic-source-dir)))
+                                                   ac-html-basic-source-dir)))
 
 (defun ac-source--html-tag-documentation (symbol)
   (let* ((where-to-find
@@ -266,7 +319,7 @@ Those files may have documantation delimited by \" \" symbol."
 ;; ac-source functions
 
 (defun ac-source-html-tag-candidates ()
-  ac-html-all-element-list)
+  (ac-html--tags))
 
 (defun ac-source-html-attribute-candidates ()
   (ac-html--attribute-candidates (ac-html--current-html-tag)))
