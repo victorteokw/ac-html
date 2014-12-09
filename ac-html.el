@@ -54,6 +54,43 @@
   (expand-file-name "html-stuff" ac-html-package-dir)
   "The directory where basic source of `ac-html' exists.")
 
+(defun ac-html-user-cache-dir ()
+  "Directory of user cache dir."
+  (let ((cache-dir (expand-file-name ".ac-html" user-emacs-directory)))
+    (unless (file-exists-p cache-dir)
+      (make-directory cache-dir))
+    cache-dir))
+
+(defun ac-html-user-current-project-dir ()
+  "Root directory of user's current project.
+Currently, use projectile to find project dir."
+  (if (featurep 'projectile)
+      (ignore-errors (projectile-project-root))))
+
+(defvar ac-html-html-modes '(web-mode html-mode haml-mode
+                                      jade-mode slim-mode))
+
+(defvar ac-html-css-modes '(css-mode sass-mode scss-mode
+                                     less-mode))
+
+(defun ac-html-mode-index-list (mode-list)
+  (let ((list-to-return ()))
+    (if (featurep 'projectile)
+        (mapc
+         (lambda (file)
+           (if (member
+                (assoc-default file auto-mode-alist 'string-match)
+                mode-list)
+               (setq list-to-return (cons file list-to-return))))
+         (projectile-dir-files (ac-html-user-current-project-dir))))
+    list-to-return))
+
+(defun ac-html-user-html-files-index ()
+  (ac-html-mode-index-list ac-html-html-modes))
+
+(defun ac-html-user-css-files-index ()
+  (ac-html-mode-index-list ac-html-css-modes))
+
 ;;; Customization
 
 (defgroup auto-complete-html nil
