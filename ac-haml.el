@@ -49,7 +49,7 @@
   (ac-html--attribute-candidates (ac-html--current-haml-tag)))
 
 (defun ac-source-haml-tag-candidates ()
-  ac-html-all-element-list)
+  (ac-html--tags))
 
 (defun ac-source-haml-attribute-documentation (symbol)
   (ac-html--attribute-documentation symbol

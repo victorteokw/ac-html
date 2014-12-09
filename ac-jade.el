@@ -48,7 +48,7 @@
   (ac-html--attribute-candidates (ac-html--current-jade-tag)))
 
 (defun ac-source-jade-tag-candidates ()
-  ac-html-all-element-list)
+  (ac-html--tags))
 
 (defun ac-source-jade-attribute-documentation (symbol)
   (ac-html--attribute-documentation symbol

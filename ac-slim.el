@@ -48,7 +48,7 @@
   (ac-html--attribute-candidates (ac-html--current-slim-tag)))
 
 (defun ac-source-slim-tag-candidates ()
-  ac-html-all-element-list)
+  (ac-html--tags))
 
 (defun ac-source-slim-attribute-documentation (symbol)
   (ac-html--attribute-documentation symbol
