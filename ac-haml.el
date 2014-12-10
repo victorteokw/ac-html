@@ -59,10 +59,6 @@
   (ac-source--html-attribute-values
    (ac-html--current-haml-tag) (ac-html--current-haml-attribute)))
 
-(defun ac-source-haml-attribute-value-document (symbol)
-  (ac-source--html-attribute-value-document symbol
-                                            (ac-html--current-haml-tag) (ac-html--current-haml-attribute)))
-
 (defun ac-haml-value-prefix ()
   ;; %foo{ bar => ""}
   ;; %foo( :bar = "")
@@ -84,9 +80,7 @@
 (defvar ac-source-haml-attribute-value
   '((candidates . ac-source-haml-value-candidates)
     (prefix . ac-haml-value-prefix)
-    (symbol . "v")
-    (document . ac-source-haml-attribute-value-document)
-    ))
+    (symbol . "v")))
 
 (defun ac-haml-enable ()
   "Add ac-haml sources into ac-sources and enable auto-comple-mode"

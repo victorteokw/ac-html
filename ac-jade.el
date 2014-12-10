@@ -59,11 +59,6 @@
     (ac-html--current-jade-tag) (ac-html--current-jade-attribute))
   )
 
-(defun ac-source-jade-attribute-value-document (symbol)
-  (ac-source--html-attribute-value-document symbol
-                                            (ac-html--current-jade-tag) (ac-html--current-jade-attribute)))
-
-
 (defun ac-jade-value-prefix ()
   (if (re-search-backward "\\w *= *[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
       (match-beginning 2)))
@@ -78,15 +73,12 @@
   '((candidates . ac-source-jade-attribute-candidates)
     (prefix . "\\(?:,\\|(\\)[ ]*\\(.*\\)")
     (symbol . "a")
-    (document . ac-source-jade-attribute-documentation)
-))
+    (document . ac-source-jade-attribute-documentation)))
 
 (defvar ac-source-jade-attribute-value
   '((candidates . ac-source-jade-value-candidates)
     (prefix . ac-jade-value-prefix)
-    (symbol . "v")
-    (document . ac-source-jade-attribute-value-document)
-    ))
+    (symbol . "v")))
 
 (defun ac-jade-enable ()
   "Add ac-jade sources into ac-sources and enable auto-comple-mode"

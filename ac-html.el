@@ -82,6 +82,11 @@ If not nil no need 'ac-source-css-property in web-mode-ac-sources-alist for web-
   :group 'auto-complete-html
   :type 'boolean)
 
+(defcustom ac-html-summary-truncate-length 10
+  "Truncation length for type summary."
+  :type 'integer
+  :group 'auto-complete-html)
+
 ;;; Variables
 
 (defvar ac-html-root-element-list
@@ -163,10 +168,21 @@ tail - filename"
         (t (mapcan #'ac-html--flatten structure))))
 
 (defun ac-html--make-popup-items (summary items)
-  "Make popup-item for each item with summary SUMMARY"
-  (mapcar #'(lambda (item)
-	      (popup-make-item item :summary summary))
-	  items))
+  "Make popup-item for each item with summary SUMMARY
+
+ITEMS are string where item and it document are separated by one space.
+Document part newlines escaped by \"\\n\".
+Truncate SUMMARY to `ac-html-summary-truncate-length'."
+  (let ((truncated-summary (truncate-string-to-width
+			    summary ac-html-summary-truncate-length 0 nil nil)))
+    (mapcar #'(lambda (item)
+		(if (string-match "\\(.*?\\) \\(.*\\)" item)
+		    (popup-make-item (match-string 1 item)
+				     :summary truncated-summary
+				     :document (replace-regexp-in-string "\\\\n" "\n"
+									 (match-string 2 item)))
+		  (popup-make-item item :summary truncated-summary)))
+	    items)))
 
 (defun ac-html--find-file (filename)
   "Find and read FILENAME from `ac-html-source-dirs'"
@@ -248,29 +264,16 @@ tail - filename"
 and html-stuff/html-attributes-complete/<TAG>-<ATTRIBUTE> files
 
 Those files may have documantation delimited by \" \" symbol."
-  (let* (
-	 (this-global-attribute-file-name
-	  (format "html-attributes-complete/global-%s" attribute-string))
-	 (this-global-attribute-file
-	  (expand-file-name this-global-attribute-file-name
-			    ac-html-basic-source-dir))
-
-	 (this-concrete-atribute-file-name
-	  (format "html-attributes-complete/%s-%s" tag-string attribute-string))
-	 (this-concrete-atribute-file
-	  (expand-file-name this-concrete-atribute-file-name
-			    ac-html-basic-source-dir))
-	 (list-to-return ()))
-
-    (if (file-exists-p this-concrete-atribute-file)
-	(setq list-to-return
-	      (append list-to-return
-		      (ac-html--load-list-from-file this-concrete-atribute-file))))
-    (if (file-exists-p this-global-attribute-file)
-	(setq list-to-return
-	      (append list-to-return
-		      (ac-html--load-list-from-file this-global-attribute-file))))
-    list-to-return))
+  (let* ((items (mapcar #'(lambda (alist)
+			    (ac-html--make-popup-items (concat (car alist) ", G")
+							   (ac-html--load-list-from-file (cdr alist))))
+			(ac-html--get-files (concat "html-attributes-complete/global-" attribute-string)))))
+    (add-to-list 'items
+		 (mapcar #'(lambda (alist)
+			     (ac-html--make-popup-items (car alist)
+							    (ac-html--load-list-from-file (cdr alist))))
+			 (ac-html--get-files (format "html-attributes-complete/%s-%s" tag-string attribute-string))))
+    (ac-html--flatten items)))
 
 (defun ac-source--html-attribute-values (tag-string attribute-string)
   (if (and ac-html-style-css
@@ -278,27 +281,8 @@ Those files may have documantation delimited by \" \" symbol."
 	   (<				; make sure that quote openned before ac-css-prefix
 	    (1+ (save-excursion (re-search-backward "\"" nil t)))
 	    (or (ac-css-prefix) 0)))	; TODO: how to compare numbers with possible nil?
-      (mapcar '(lambda(css-item)	; if attribute is "style"
-		 (popup-make-item css-item
-				  :summary "CSS"))
-	      (ac-css-property-candidates))
-    (let ( (lines (ac-source--html-values-internal tag-string attribute-string)) )
-      (mapcar '(lambda(line)
-		 (replace-regexp-in-string "[ ].*" "" line))
-	      lines))))
-
-(defun ac-source--html-attribute-value-document (symbol tag-string attribute-string)
-  (let* ( (word (if (symbolp symbol)
-                    (symbol-name symbol)
-                  symbol))
-          (len (length word)) )
-    (let ( help )
-      (mapc '(lambda(line)
-               (when (>= (length line) len)
-                 (when (string= word (substring line 0 (length word)))
-                   (setq help (substring line (length word))))))
-            (ac-source--html-values-internal tag-string attribute-string))
-      (replace-regexp-in-string "\\\\n" "\n" (substring help 1)))))
+      (ac-html--make-popup-items "CSS" (ac-css-property-candidates))
+    (ac-source--html-values-internal tag-string attribute-string)))
 
 ;; ac-source functions
 
@@ -315,10 +299,6 @@ Those files may have documantation delimited by \" \" symbol."
 (defun ac-source-html-attribute-value-candidates ()
   (ac-source--html-attribute-values
    (ac-html--current-html-tag) (ac-html--current-html-attribute)))
-
-(defun ac-source-html-attribute-value-document (symbol)
-  (ac-source--html-attribute-value-document symbol
-                                            (ac-html--current-html-tag) (ac-html--current-html-attribute)))
 
 (defun ac-html-value-prefix ()
   (if (re-search-backward "\\w=[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
@@ -339,7 +319,6 @@ Those files may have documantation delimited by \" \" symbol."
 (defvar ac-source-html-attribute-value
   '((candidates . ac-source-html-attribute-value-candidates)
     (prefix . ac-html-value-prefix)
-    (document . ac-source-html-attribute-value-document)
     (symbol . "v")
 ))
 

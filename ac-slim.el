@@ -59,11 +59,6 @@
     (ac-html--current-slim-tag) (ac-html--current-slim-attribute))
   )
 
-(defun ac-source-slim-attribute-value-document (symbol)
-  (ac-source--html-attribute-value-document symbol
-                                            (ac-html--current-slim-tag) (ac-html--current-slim-attribute)))
-
-
 (defun ac-slim-value-prefix ()
   (if (re-search-backward "\\w *= *[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
       (match-beginning 2)))
@@ -78,15 +73,12 @@
   '((candidates . ac-source-slim-attribute-candidates)
     (prefix . " \\(.*\\)")
     (symbol . "a")
-    (document . ac-source-slim-attribute-documentation)
-))
+    (document . ac-source-slim-attribute-documentation)))
 
 (defvar ac-source-slim-attribute-value
   '((candidates . ac-source-slim-value-candidates)
     (prefix . ac-slim-value-prefix)
-    (symbol . "v")
-    (document . ac-source-slim-attribute-value-document)
-    ))
+    (symbol . "v")))
 
 (defun ac-slim-enable ()
   "Add ac-slim sources into ac-sources and enable auto-comple-mode"
