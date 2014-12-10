@@ -120,6 +120,15 @@ It may contain some bugs.
 
 If you find some bug, please report it via issues.
 
+### known bugs
+
+Due using external function `ac-css-prefix` there no CSS completion for style in `html-mode`.
+Problem in syntax table of `html-mode`. Maybe in future we rewrite own `ac-css-prefix`. Test:
+```html
+<foo style="font-family:
+```
+`web-mode`, slim, jade, haml, work fine.
+
 Contribution
 ------
 Any contribution is welcome.
