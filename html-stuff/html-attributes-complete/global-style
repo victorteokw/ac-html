@@ -13,6 +13,7 @@ animation-iteration-count Specifies the number of times an animation should be p
 animation-name Specifies a name for the @keyframes animation\nCSS3
 animation-play-state Specifies whether the animation is running or paused\nCSS3
 animation-timing-function Specifies the speed curve of the animation\nCSS3
+azimuth This property is most likely to be implemented by mixing the same signal into different channels at differing volumes
 backface-visibility Defines whether or not an element should be visible when not facing the screen\nCSS3
 background Sets all the background properties in one declaration\nCSS1
 background-attachment Sets whether a background image is fixed or scrolls with the rest of the page\nCSS1
@@ -80,9 +81,13 @@ columns A shorthand property for setting column-width and column-count\nCSS3
 content Used with the :before and :after pseudo-elements, to insert generated content\nCSS2
 counter-increment Increments one or more counters\nCSS2
 counter-reset Creates or resets one or more counters\nCSS2
+cue The 'cue' property is a shorthand for setting 'cue-before' and 'cue-after'.
+cue-after Auditory icons are another way to distinguish semantic elements. Sounds may be played before and/or after the element to delimit it.
+cue-before Auditory icons are another way to distinguish semantic elements. Sounds may be played before and/or after the element to delimit it.
 cursor Specifies the type of cursor to be displayed\nCSS2
 direction Specifies the text direction/writing direction\nCSS2
 display Specifies how a certain HTML element should be displayed\nCSS1
+elevation The precise means used to achieve this effect and the number of speakers used to do so are undefined.
 empty-cells Specifies whether or not to display borders and background on empty cells in a table\nCSS2
 filter Defines effects (e.g. blurring or color shifting) on an element before the element is displayed\nCSS3
 flex Specifies the length of the item, relative to the rest\nCSS3
@@ -174,16 +179,30 @@ padding-top Sets the top padding of an element\nCSS1
 page-break-after Sets the page-breaking behavior after an element\nCSS2
 page-break-before Sets the page-breaking behavior before an element\nCSS2
 page-break-inside Sets the page-breaking behavior inside an element\nCSS2
+pause The 'pause' property is a shorthand for setting 'pause-before' and 'pause-after'. If two values are given, the first value is 'pause-before' and the second is 'pause-after'. If only one value is given, it applies to both properties. 
+pause-after Specify a pause to be observed after speaking an element's content.
+pause-before Specify a pause to be observed before speaking an element's content.
 perspective Specifies the perspective on how 3D elements are viewed\nCSS3
 perspective-origin Specifies the bottom position of 3D elements\nCSS3
 phonemes Specifies a phonetic pronunciation for the text contained by the corresponding element\nCSS3
+pitch Specifies the average pitch (a frequency) of the speaking voice.\n <frequency> | x-low | low | medium | high | x-high | inherit
+pitch-range The perceived pitch of a human voice is determined by the fundamental frequency and typically has a value of 120Hz for a male voice and 210Hz for a female voice.
+play-during Similar to the 'cue-before' and 'cue-after' properties, this property specifies a sound to be played as a background while an element's content is spoken.
 position Specifies the type of positioning method used for an element (static, relative, absolute or fixed)\nCSS2
 quotes Sets the type of quotation marks for embedded quotations\nCSS2
 resize Specifies whether or not an element is resizable by the user\nCSS3
 rest A shorthand property for setting the rest-before and rest-after properties\nCSS3
 rest-after Specifies a rest or prosodic boundary to be observed after speaking an element's content\nCSS3
 rest-before Specifies a rest or prosodic boundary to be observed before speaking an element's content\nCSS3
+richness Specifies the richness, or brightness, of the speaking voice.
 right Specifies the right position of a positioned element\nCSS2
+speak Specifies whether text will be rendered aurally and if so, in what manner.
+speak-as The "speak-as" property determines in what manner text gets rendered aurally, based upon a predefined list of possibilities.\n Value: normal | spell-out || digits || [ literal-punctuation | no-punctuation ]\nCSS3\n
+speak-header This property specifies whether table headers are spoken before every cell, or only before a cell when that cell is associated with a different header than the previous cell.\n Value: once | always
+speak-numeral This property controls how numerals are spoken.
+speak-punctuation This property specifies how punctuation is spoken.
+speech-rate This property specifies the speaking rate.\nNote that both absolute and relative keyword values are allowed (compare with 'font-size').
+stress Specifies the height of "local peaks" in the intonation contour of a voice.
 tab-size Specifies the length of the tab-character\nCSS3
 table-layout Sets the layout algorithm to be used for a table\nCSS2
 text-align Specifies the horizontal alignment of text\nCSS1
@@ -214,11 +233,13 @@ vertical-align Sets the vertical alignment of an element\nCSS1
 visibility Specifies whether or not an element is visible\nCSS2
 voice-balance Specifies the balance between left and right channels\nCSS3
 voice-duration Specifies how long it should take to render the selected element's content\nCSS3
+voice-family The value is a comma-separated, prioritized list of voice family names (compare with 'font-family').
 voice-pitch Specifies the average pitch (a frequency) of the speaking voice\nCSS3
 voice-pitch-range Specifies variation in average pitch\nCSS3
 voice-rate Controls the speaking rate\nCSS3
 voice-stress Indicates the strength of emphasis to be applied\nCSS3
 voice-volume Refers to the amplitude of the waveform output by the speech synthesises\nCSS3
+volume Volume refers to the median volume of the waveform.
 white-space Specifies how white-space inside an element is handled\nCSS1
 widows Sets the minimum number of lines that must be left at the top of a page when a page break occurs inside an element\nCSS2
 width Sets the width of an element\nCSS1
