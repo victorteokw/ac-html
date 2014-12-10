@@ -69,7 +69,6 @@ completion to these modes.")
   "Modes recognized to be css compatible modes. Should provide css
 completion to these modes.")
 
-
 (defun ac-html-mode-index-list (mode-list &optional project-dir)
   "Return a list of user project's files that should be opened with
 a mode in MODE-LIST."

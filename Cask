@@ -5,4 +5,5 @@
 
 (development
  (depends-on "ert")
- (depends-on "yasnippet"))
+ (depends-on "yasnippet")
+ (depends-on "projectile"))

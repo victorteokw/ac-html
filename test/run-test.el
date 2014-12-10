@@ -5,6 +5,8 @@
         (add-to-list 'load-path p))
       (list ac-html-test-dir ac-html-root-dir))
 
+(load "ac-html-cache-test")
+
 (load "ac-html-test")
 (load "ac-haml-test")
 (load "ac-slim-test")
