@@ -69,7 +69,8 @@ completion to these modes.")
   "Modes recognized to be css compatible modes. Should provide css
 completion to these modes.")
 
-(defun ac-html-mode-index-list (mode-list)
+
+(defun ac-html-mode-index-list (mode-list &optional project-dir)
   "Return a list of user project's files that should be opened with
 a mode in MODE-LIST."
   (let ((list-to-return ()))
@@ -80,16 +81,17 @@ a mode in MODE-LIST."
              (assoc-default file auto-mode-alist 'string-match)
              mode-list)
             (setq list-to-return (cons file list-to-return))))
-      (projectile-dir-files (ac-html-user-current-project-dir))))
+      (projectile-dir-files
+       (or project-dir (ac-html-user-current-project-dir)))))
     list-to-return))
 
-(defun ac-html-user-html-files-index ()
+(defun ac-html-user-html-files-index (&optional project-dir)
   "Return a list of user's html compatible files."
-  (ac-html-mode-index-list ac-html-html-modes))
+  (ac-html-mode-index-list ac-html-html-modes project-dir))
 
-(defun ac-html-user-css-files-index ()
+(defun ac-html-user-css-files-index (&optional project-dir)
   "Return a list of user's css compatible files."
-  (ac-html-mode-index-list ac-html-css-modes))
+  (ac-html-mode-index-list ac-html-css-modes project-dir))
 
 (defun ac-html-cache-bundle-location (source project-cache-dir)
   "Take SOURCE and PROJECT-CACHE-DIR, then return a directory contain all
@@ -109,30 +111,90 @@ PROJECT-CACHE-DIR should be absolute directory.
 SOURCE should be file name relative to project dir."
   (ac-html-ensure-project
    (expand-file-name "class.list"
-                     (ac-html-cache-bundle-location))))
+                     (ac-html-cache-bundle-location
+                      source project-cache-dir))))
 
 (defun ac-html-id-file-location (source project-cache-dir)
   "Same as `ac-html-class-file-location', except this function returns
 id file location."
   (ac-html-ensure-project
    (expand-file-name "id.list"
-                     (ac-html-cache-bundle-location))))
+                     (ac-html-cache-bundle-location
+                      source project-cache-dir))))
 
-(defun ac-html-md5-of-file (source project-dir)
-  )
+(defun ac-html-md5-file-location (source project-cache-dir)
+  "Same as `ac-html-class-file-location' and `ac-html-id-file-location',
+this function returns md5 hash file location."
+  (ac-html-ensure-project
+   (expand-file-name "md5.hash"
+                     (ac-html-cache-bundle-location
+                      source project-cache-dir))))
+
+(defun ac-html-file-full-name (source project-dir)
+  "Return full path of SOURCE."
+  (expand-file-name source project-dir))
+
+(defun ac-html-md5-of-file (file-full-name)
+  "Return md5 cauculation of file at source"
+  (with-current-buffer (find-file-noselect file-full-name)
+    (let (hash)
+      (setq hash (md5 (current-buffer)))
+      (kill-buffer (current-buffer))
+      hash)))
 
 (defun ac-html-cached-md5-of-file
-    (source project-dir &optional project-cache-dir)
+    (source &optional project-dir project-cache-dir)
+  "Must specify whether PROJECT-DIR or PROJECT-CACHE-DIR."
+  (setq project-cache-dir
+        (or project-cache-dir (ac-html-user-project-cache-dir project-dir)))
+  (or project-cache-dir (error "ac-html-cached-md5-of-file: argument error."))
+  (with-current-buffer
+      (find-file-noselect (ac-html-md5-file-location source project-cache-dir))
+    (let (hash)
+      (setq hash
+            (save-restriction
+              (widen)
+              (buffer-substring-no-properties (point-min) (point-max))))
+      (kill-buffer (current-buffer))
+      hash)))
 
-  )
+(defun ac-html-hash-and-save-md5-file (source project-dir &optional location)
+  "MD5 hash SOURCE file in PROJECT-DIR, and place its md5 into corresponding
+cache file.
+LOCATION argument is in discuss and not implemented."
+  (let ((hash-string
+         (ac-html-md5-of-file (ac-html-file-full-name source project-dir)))
+        (file-location
+         (ac-html-md5-file-location
+          source (ac-html-user-project-cache-dir project-dir))))
+    (with-current-buffer
+        (find-file-noselect file-location)
+      (erase-buffer)
+      (insert hash-string)
+      (save-buffer)
+      (kill-buffer))))
 
-(defun ac-html-generate-corresponding-class-file (source &optional location)
+(defun ac-html-file-need-index (source project-dir)
+  "Compare SOURCE file content md5 with cached md5. If same, return nil.
+Otherwise, return t."
+  (not (string=
+        (ac-html-md5-of-file (ac-html-file-full-name source project-dir))
+        (ac-html-cached-md5-of-file source project-dir))))
+
+(defun ac-html-hash-and-save-md5-file-if-needed (source project-dir)
+  "MD5 hash SOURCE file if needed. This function is just combination of
+`ac-html-hash-and-save-md5-file' and `ac-html-file-need-index'."
+  (if (ac-html-file-need-index source project-dir)
+      (ac-html-hash-and-save-md5-file source project-dir)))
+
+(defun ac-html-generate-corresponding-class-file
+    (source project-dir &optional location)
   "Generate class list file from SOURCE file. SOURCE file can be
 html compatible file or css compatible file.
 Return location of class file."
   )
-
-(defun ac-html-generate-corresponding-id-file (source &optional location)
+(defun ac-html-generate-corresponding-id-file
+    (source project-dir &optional location)
   "Generate id list file from SOURCE file. SOURCE file can be
 html compatible file or css compatible file.
 Return location of id file.")
@@ -145,8 +207,6 @@ Return location of id file.")
 
 (defvar ac-html-css-class-re-list nil
   "")
-
-
 
 (provide 'ac-html-cache)
 ;; ac-html-cache.el ends here
