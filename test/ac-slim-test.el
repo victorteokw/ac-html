@@ -8,7 +8,7 @@
       (progn
         (with-temp-buffer
           (insert "html\n  head\n    title\n This Title\n  body\n    div")
-          (goto-char 30)
+          (goto-char 24)
           (funcall body)))))
 
 (ert-deftest test-ac-html--current-slim-tag ()
