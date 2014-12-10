@@ -45,7 +45,9 @@
     attr-string))
 
 (defun ac-source-jade-attribute-candidates ()
-  (ac-html--attribute-candidates (ac-html--current-jade-tag)))
+  (ac-html--attribute-candidates (ac-html--current-jade-tag)
+				 #'(lambda (symbol)
+				     (ac-html--attribute-documentation symbol (ac-html--current-jade-tag)))))
 
 (defun ac-source-jade-tag-candidates ()
   (ac-html--tags))
@@ -66,14 +68,12 @@
 (defvar ac-source-jade-tag
   '((candidates . ac-source-jade-tag-candidates)
     (prefix . "^[\t ]*\\(.*\\)")
-    (symbol . "t")
-    (document . ac-source--html-tag-documentation)))
+    (symbol . "t")))
 
 (defvar ac-source-jade-attribute
   '((candidates . ac-source-jade-attribute-candidates)
     (prefix . "\\(?:,\\|(\\)[ ]*\\(.*\\)")
-    (symbol . "a")
-    (document . ac-source-jade-attribute-documentation)))
+    (symbol . "a")))
 
 (defvar ac-source-jade-attribute-value
   '((candidates . ac-source-jade-value-candidates)

@@ -45,7 +45,9 @@
     attr-string))
 
 (defun ac-source-slim-attribute-candidates ()
-  (ac-html--attribute-candidates (ac-html--current-slim-tag)))
+  (ac-html--attribute-candidates (ac-html--current-slim-tag)
+				 #'(lambda (symbol)
+				     (ac-html--attribute-documentation symbol (ac-html--current-slim-tag)))))
 
 (defun ac-source-slim-tag-candidates ()
   (ac-html--tags))
@@ -66,14 +68,12 @@
 (defvar ac-source-slim-tag
   '((candidates . ac-source-slim-tag-candidates)
     (prefix . "^[\t ]*\\(.*\\)")
-    (symbol . "t")
-    (document . ac-source--html-tag-documentation)))
+    (symbol . "t")))
 
 (defvar ac-source-slim-attribute
   '((candidates . ac-source-slim-attribute-candidates)
     (prefix . " \\(.*\\)")
-    (symbol . "a")
-    (document . ac-source-slim-attribute-documentation)))
+    (symbol . "a")))
 
 (defvar ac-source-slim-attribute-value
   '((candidates . ac-source-slim-value-candidates)

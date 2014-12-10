@@ -46,14 +46,12 @@
     attr-string))
 
 (defun ac-source-haml-attribute-candidates ()
-  (ac-html--attribute-candidates (ac-html--current-haml-tag)))
+  (ac-html--attribute-candidates (ac-html--current-haml-tag)
+				 #'(lambda (symbol)
+				     (ac-html--attribute-documentation symbol (ac-html--current-haml-tag)))))
 
 (defun ac-source-haml-tag-candidates ()
   (ac-html--tags))
-
-(defun ac-source-haml-attribute-documentation (symbol)
-  (ac-html--attribute-documentation symbol
-                                    (ac-html--current-haml-tag)))
 
 (defun ac-source-haml-value-candidates ()
   (ac-source--html-attribute-values
@@ -68,14 +66,12 @@
 (defvar ac-source-haml-tag
   '((candidates . ac-source-haml-tag-candidates)
     (prefix . "%\\(.*\\)")
-    (symbol . "t")
-    (document . ac-source--html-tag-documentation)))
+    (symbol . "t")))
 
 (defvar ac-source-haml-attribute
   '((candidates . ac-source-haml-attribute-candidates)
     (prefix . ":\\(.*\\)")
-    (symbol . "a")
-    (document . ac-source-haml-attribute-documentation)))
+    (symbol . "a")))
 
 (defvar ac-source-haml-attribute-value
   '((candidates . ac-source-haml-value-candidates)

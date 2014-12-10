@@ -167,11 +167,14 @@ tail - filename"
         ((atom structure) (list structure))
         (t (mapcan #'ac-html--flatten structure))))
 
-(defun ac-html--make-popup-items (summary items)
+(defun ac-html--make-popup-items (summary items document)
   "Make popup-item for each item with summary SUMMARY
 
 ITEMS are string where item and it document are separated by one space.
 Document part newlines escaped by \"\\n\".
+
+If item have no inline document, DOCUMENT will beused. DOCUMENT must be string or function.
+
 Truncate SUMMARY to `ac-html-summary-truncate-length'."
   (let ((truncated-summary (truncate-string-to-width
 			    summary ac-html-summary-truncate-length 0 nil nil)))
@@ -181,7 +184,9 @@ Truncate SUMMARY to `ac-html-summary-truncate-length'."
 				     :summary truncated-summary
 				     :document (replace-regexp-in-string "\\\\n" "\n"
 									 (match-string 2 item)))
-		  (popup-make-item item :summary truncated-summary)))
+		  (popup-make-item item
+				   :summary truncated-summary
+				   :document document)))
 	    items)))
 
 (defun ac-html--find-file (filename)
@@ -195,17 +200,16 @@ Truncate SUMMARY to `ac-html-summary-truncate-length'."
 (defun ac-html--tags ()
   (ac-html--flatten
    (mapcar #'(lambda (alist)
-	       ;;(ac-html--load-list-from-file (cdr alist)))
 	       (ac-html--make-popup-items (car alist)
 					  (ac-html--load-list-from-file (cdr alist))
+					  #'(lambda (symbol) 
+					      (let ((doc (ac-html--find-file (concat "html-tag-short-docs/" symbol))))
+						(if doc
+						    doc
+						  "Currently not documented."))
+					      )
 					  ))
 	   (ac-html--get-files "html-tag-list"))))
-
-(defun ac-source--html-tag-documentation (symbol)
-  (let ((doc (ac-html--find-file (concat "html-tag-short-docs/" symbol))))
-    (if doc
-	doc
-      "Currently not documented.")))
 
 (defun ac-html--attribute-documentation (attribute tag)
   (let* ((doc-file (format "html-attributes-short-docs/%s-%s" tag attribute))
@@ -228,19 +232,21 @@ Truncate SUMMARY to `ac-html-summary-truncate-length'."
       (memq faces ac-html-string-check-faces) ;faces is atom
       )))
 
-(defun ac-html--attribute-candidates (tag-string)
+(defun ac-html--attribute-candidates (tag-string document)
   "Attribute candidates. Summary \"G\" if global."
   (unless (ac-html--check-string-face)
     (let* ((items
 	    (mapcar #'(lambda (alist)
 			(ac-html--make-popup-items (concat (car alist) ", G")
 						   (ac-html--load-list-from-file (cdr alist))
+						   document
 						   ))
 		    (ac-html--get-files "html-attributes-list/global"))))
       (add-to-list 'items
 		   (mapcar #'(lambda (alist)
 			       (ac-html--make-popup-items (car alist)
 							  (ac-html--load-list-from-file (cdr alist))
+							  document
 							  ))
 			   (ac-html--get-files (concat "html-attributes-list/" tag-string))))     
       (ac-html--flatten items))))
@@ -266,12 +272,14 @@ and html-stuff/html-attributes-complete/<TAG>-<ATTRIBUTE> files
 Those files may have documantation delimited by \" \" symbol."
   (let* ((items (mapcar #'(lambda (alist)
 			    (ac-html--make-popup-items (concat (car alist) ", G")
-							   (ac-html--load-list-from-file (cdr alist))))
+						       (ac-html--load-list-from-file (cdr alist))
+						       nil))
 			(ac-html--get-files (concat "html-attributes-complete/global-" attribute-string)))))
     (add-to-list 'items
 		 (mapcar #'(lambda (alist)
 			     (ac-html--make-popup-items (car alist)
-							    (ac-html--load-list-from-file (cdr alist))))
+							(ac-html--load-list-from-file (cdr alist))
+							nil))
 			 (ac-html--get-files (format "html-attributes-complete/%s-%s" tag-string attribute-string))))
     (ac-html--flatten items)))
 
@@ -281,7 +289,7 @@ Those files may have documantation delimited by \" \" symbol."
 	   (<				; make sure that quote openned before ac-css-prefix
 	    (1+ (save-excursion (re-search-backward "\"" nil t)))
 	    (or (ac-css-prefix) 0)))	; TODO: how to compare numbers with possible nil?
-      (ac-html--make-popup-items "CSS" (ac-css-property-candidates))
+      (ac-html--make-popup-items "CSS" (ac-css-property-candidates) nil)
     (ac-source--html-values-internal tag-string attribute-string)))
 
 ;; ac-source functions
@@ -290,11 +298,9 @@ Those files may have documantation delimited by \" \" symbol."
   (ac-html--tags))
 
 (defun ac-source-html-attribute-candidates ()
-  (ac-html--attribute-candidates (ac-html--current-html-tag)))
-
-(defun ac-source-html-attribute-documentation (symbol)
-  (ac-html--attribute-documentation symbol
-                                    (ac-html--current-html-tag)))
+  (ac-html--attribute-candidates (ac-html--current-html-tag)
+				 #'(lambda (symbol)
+				     (ac-html--attribute-documentation symbol (ac-html--current-html-tag)))))
 
 (defun ac-source-html-attribute-value-candidates ()
   (ac-source--html-attribute-values
@@ -307,14 +313,12 @@ Those files may have documantation delimited by \" \" symbol."
 (defvar ac-source-html-tag
   '((candidates . ac-source-html-tag-candidates)
     (prefix . "<\\(.*\\)")
-    (symbol . "t")
-    (document . ac-source--html-tag-documentation)))
+    (symbol . "t")))
 
 (defvar ac-source-html-attribute
   '((candidates . ac-source-html-attribute-candidates)
     (prefix . "<\\w[^>]*[[:space:]]+\\(.*\\)")
-    (symbol . "a")
-    (document . ac-source-html-attribute-documentation)))
+    (symbol . "a")))
 
 (defvar ac-source-html-attribute-value
   '((candidates . ac-source-html-attribute-value-candidates)
