@@ -1,4 +1,4 @@
-ac-html [![melpa badge][melpa-badge]][melpa-link]
+ac-html [![melpa badge][melpa-badge]][melpa-link] [![Build Status](https://travis-ci.org/cheunghy/ac-html.png?branch=master)](https://travis-ci.org/cheunghy/ac-html)
 =======
 
 Emacs auto complete source for html tag and attributes.
