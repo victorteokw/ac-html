@@ -30,35 +30,31 @@
 
 (require 'ac-html)
 
-(defun ac-html--current-jade-tag ()
+(defun ac-jade-current-tag ()
   "Return current jade tag user is typing on."
-  (let* ((tag-search (save-excursion
-                       (re-search-backward "^[\t ]*\\(\\w+\\)" nil t)))
-         (tag-string (match-string 1)))
-    tag-string))
+  (save-excursion (re-search-backward "^[\t ]*\\(\\w+\\)" nil t))
+  (match-string 1))
 
-(defun ac-html--current-jade-attribute ()
+(defun ac-jade-current-attribute ()
   "Return current html tag's attribute user is typing on."
-  (let* ((attr-search (save-excursion
-		       (re-search-backward "[^a-z-]\\([a-z-]+\\) *=" nil t)))
-	 (attr-string (match-string 1)))
-    attr-string))
+  (save-excursion (re-search-backward "[^a-z-]\\([a-z-]+\\) *=" nil t))
+  (match-string 1))
 
 (defun ac-source-jade-attribute-candidates ()
-  (ac-html--attribute-candidates (ac-html--current-jade-tag)
+  (ac-html--attribute-candidates (ac-jade-current-tag)
 				 #'(lambda (symbol)
-				     (ac-html--attribute-documentation symbol (ac-html--current-jade-tag)))))
+				     (ac-html--attribute-documentation symbol (ac-jade-current-tag)))))
 
 (defun ac-source-jade-tag-candidates ()
   (ac-html--tags))
 
 (defun ac-source-jade-attribute-documentation (symbol)
   (ac-html--attribute-documentation symbol
-                                    (ac-html--current-jade-tag)))
+                                    (ac-jade-current-tag)))
 
 (defun ac-source-jade-value-candidates ()
    (ac-source--html-attribute-values
-    (ac-html--current-jade-tag) (ac-html--current-jade-attribute))
+    (ac-jade-current-tag) (ac-jade-current-attribute))
   )
 
 (defun ac-jade-value-prefix ()

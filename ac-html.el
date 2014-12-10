@@ -251,20 +251,6 @@ Truncate SUMMARY to `ac-html-summary-truncate-length'."
 			   (ac-html--get-files (concat "html-attributes-list/" tag-string))))     
       (ac-html--flatten items))))
 
-(defun ac-html--current-html-tag ()
-  "Return current html tag user is typing on."
-  (let* ((tag-search (save-excursion
-		       (re-search-backward "<\\(\\w+\\)[[:space:]]+" nil t)))
-	 (tag-string (match-string 1)))
-    tag-string))
-
-(defun ac-html--current-html-attribute ()
-  "Return current html tag's attribute user is typing on."
-  (let* ((tag-search (save-excursion
-		       (re-search-backward "[^a-z-]\\([a-z-]+\\)=" nil t)))
-	 (tag-string (match-string 1)))
-    tag-string))
-
 (defun ac-source--html-values-internal (tag-string attribute-string)
   "Read html-stuff/html-attributes-complete/global-<ATTRIBUTE>
 and html-stuff/html-attributes-complete/<TAG>-<ATTRIBUTE> files
@@ -294,17 +280,27 @@ Those files may have documantation delimited by \" \" symbol."
 
 ;; ac-source functions
 
+(defun ac-html-current-tag ()
+  "Return current html tag user is typing on."
+  (save-excursion (re-search-backward "<\\(\\w+\\)[[:space:]]+" nil t))
+  (match-string 1))
+
+(defun ac-html-current-attribute ()
+  "Return current html tag's attribute user is typing on."
+  (save-excursion (re-search-backward "[^a-z-]\\([a-z-]+\\)=" nil t))
+  (match-string 1))
+
 (defun ac-source-html-tag-candidates ()
   (ac-html--tags))
 
 (defun ac-source-html-attribute-candidates ()
-  (ac-html--attribute-candidates (ac-html--current-html-tag)
+  (ac-html--attribute-candidates (ac-html-current-tag)
 				 #'(lambda (symbol)
-				     (ac-html--attribute-documentation symbol (ac-html--current-html-tag)))))
+				     (ac-html--attribute-documentation symbol (ac-html-current-tag)))))
 
 (defun ac-source-html-attribute-value-candidates ()
   (ac-source--html-attribute-values
-   (ac-html--current-html-tag) (ac-html--current-html-attribute)))
+   (ac-html-current-tag) (ac-html-current-attribute)))
 
 (defun ac-html-value-prefix ()
   (if (re-search-backward "\\w=[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
