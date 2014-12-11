@@ -7,3 +7,5 @@
 
 (load "ac-html-test")
 (load "ac-haml-test")
+(load "ac-slim-test")
+(load "ac-jade-test")

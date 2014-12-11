@@ -215,6 +215,22 @@ Truncate SUMMARY to `ac-html-summary-truncate-length'."
           "Currently not documented.")
         ))))
 
+(defvar ac-html-all-element-list
+  (ac-html--load-list-from-file (expand-file-name "html-tag-list"
+                                                  ac-html-basic-source-dir)))
+
+(defun ac-source--html-tag-documentation (symbol)
+  (let* ((where-to-find
+          (expand-file-name "html-tag-short-docs"
+                            ac-html-basic-source-dir))
+         (doc-file (expand-file-name symbol where-to-find)))
+    (if (file-exists-p doc-file)
+        (progn
+          (with-temp-buffer
+            (insert-file-contents doc-file)
+            (buffer-string)))
+      "Currently not documented.")))
+
 (defun ac-html--check-string-face ()
   "t if text's face(s) at point is in `ac-html-string-check-faces'."
   (let ((faces (get-text-property (point) 'face)))
@@ -242,11 +258,13 @@ Truncate SUMMARY to `ac-html-summary-truncate-length'."
                            (ac-html--get-files (concat "html-attributes-list/" tag-string))))
       (ac-html--flatten items))))
 
+
 (defun ac-source--html-values-internal (tag-string attribute-string)
   "Read html-stuff/html-attributes-complete/global-<ATTRIBUTE>
 and html-stuff/html-attributes-complete/<TAG>-<ATTRIBUTE> files
 
 Those files may have documantation delimited by \" \" symbol."
+
   (let* ((items (mapcar #'(lambda (alist)
                             (ac-html--make-popup-items (concat (car alist) ", G")
                                                        (ac-html--load-list-from-file (cdr alist))
@@ -260,14 +278,32 @@ Those files may have documantation delimited by \" \" symbol."
                          (ac-html--get-files (format "html-attributes-complete/%s-%s" tag-string attribute-string))))
     (ac-html--flatten items)))
 
+
 (defun ac-source--html-attribute-values (tag-string attribute-string)
   (if (and ac-html-style-css
            (string= attribute-string "style")
            (<				; make sure that quote openned before ac-css-prefix
             (1+ (save-excursion (re-search-backward "\"" nil t)))
             (or (ac-css-prefix) 0)))	; TODO: how to compare numbers with possible nil?
+
       (ac-html--make-popup-items "CSS" (ac-css-property-candidates) nil)
     (ac-source--html-values-internal tag-string attribute-string)))
+
+;;; auto complete HTML for html-mode and web-mode
+
+(defun ac-html--current-html-tag ()
+  "Return current html tag user is typing on."
+  (let* ((tag-search (save-excursion
+                       (re-search-backward "<\\(\\w+\\)[[:space:]]+" nil t)))
+         (tag-string (match-string 1)))
+    tag-string))
+
+(defun ac-html--current-html-attribute ()
+  "Return current html tag's attribute user is typing on."
+  (let* ((tag-search (save-excursion
+                       (re-search-backward "[^a-z-]\\([a-z-]+\\)=" nil t)))
+         (tag-string (match-string 1)))
+    tag-string))
 
 ;; ac-source functions
 
@@ -314,7 +350,7 @@ Those files may have documantation delimited by \" \" symbol."
     ))
 
 (defun ac-html-enable ()
-  "Add ac-html sources into ac-sources and enable auto-comple-mode"
+  "Add ac-html sources into ac-sources and enable auto-comple-mode."
   (interactive)
   (mapc (lambda (source)
           (if (not (memq source ac-sources))
