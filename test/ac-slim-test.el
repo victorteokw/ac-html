@@ -7,8 +7,8 @@
   (unwind-protect
       (progn
         (with-temp-buffer
-          (insert "html\n  head\n    title\n This Title\n  body\n    div")
-          (goto-char 24)
+          (insert "html\n  head\n    title This Title\n  body\n    div")
+          (goto-char 30)
           (funcall body)))))
 
 (ert-deftest test-ac-html--current-slim-tag ()
