@@ -302,9 +302,9 @@ Those files may have documantation delimited by \" \" symbol."
   '((candidates . ac-source-html-attribute-value-candidates)
     (prefix . ac-html-value-prefix)
     (document . ac-source-html-attribute-value-document)
-    (symbol . "v")
-))
+    (symbol . "v")))
 
+;;;###autoload
 (defun ac-html-enable ()
   "Add ac-html sources into ac-sources and enable auto-comple-mode."
   (interactive)
