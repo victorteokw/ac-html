@@ -1,4 +1,4 @@
-ac-html [![melpa badge][melpa-badge]][melpa-link] [![Build Status](https://travis-ci.org/cheunghy/ac-html.png?branch=master)](https://travis-ci.org/cheunghy/ac-html)
+ac-html [![melpa badge][melpa-badge]][melpa-link] [![melpa stable badge][melpa-stable-badge]][melpa-stable-link] [![Build Status](https://travis-ci.org/cheunghy/ac-html.png?branch=master)](https://travis-ci.org/cheunghy/ac-html)
 =======
 
 Emacs auto complete source for html and css.
@@ -53,3 +53,5 @@ Requested features and bad bugs are listed in issues.
 
 [melpa-link]: http://melpa.org/#/ac-html
 [melpa-badge]: http://melpa.org/packages/ac-html-badge.svg
+[melpa-stable-link]: http://stable.melpa.org/#/ac-html
+[melpa-stable-badge]: http://stable.melpa.org/packages/ac-html-badge.svg
