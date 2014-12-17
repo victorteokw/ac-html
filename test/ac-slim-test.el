@@ -12,14 +12,13 @@
           (funcall body)))))
 
 (ert-deftest test-ac-html--current-slim-tag ()
-  "Test `ac-html--current-slim-tag' correctly scan the tag user is typing on."
+  "Test `ac-slim-current-tag' correctly scan the tag user is typing on."
   (test-suite-slim-current-thing-scan
    (lambda ()
-     (should (equal (ac-html--current-slim-tag) "title")))))
+     (should (equal (ac-slim-current-tag) "title")))))
 
-(ert-deftest test-ac-html--current-slim-attribute-candidates ()
-  "Test `ac-html--current-slim-attribute-candidates' return correctly."
+(ert-deftest test-ac-source-slim-attribute-candidates ()
+  "Test `ac-source-slim-attribute-candidates' return correctly."
   (test-suite-slim-current-thing-scan
    (lambda ()
-     (should (equal (nth 2 (ac-source-slim-attribute-candidates))
-                    "contenteditable")))))
+     (should (member "class" (ac-source-slim-attribute-candidates))))))
