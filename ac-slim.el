@@ -88,6 +88,7 @@
     (document . ac-source-slim-attribute-value-document)
     ))
 
+;;;###autoload
 (defun ac-slim-enable ()
   "Add ac-slim sources into ac-sources and enable auto-comple-mode"
   (interactive)

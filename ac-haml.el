@@ -88,6 +88,7 @@
     (document . ac-source-haml-attribute-value-document)
     ))
 
+;;;###autoload
 (defun ac-haml-enable ()
   "Add ac-haml sources into ac-sources and enable auto-comple-mode"
   (interactive)
