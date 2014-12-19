@@ -88,6 +88,7 @@
     (document . ac-source-jade-attribute-value-document)
     ))
 
+;;;###autoload
 (defun ac-jade-enable ()
   "Add ac-jade sources into ac-sources and enable auto-comple-mode"
   (interactive)

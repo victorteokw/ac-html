@@ -286,18 +286,21 @@ Those files may have documantation delimited by \" \" symbol."
   (if (re-search-backward "\\w=[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
       (match-beginning 2)))
 
+;;;###autoload
 (defvar ac-source-html-tag
   '((candidates . ac-source-html-tag-candidates)
     (prefix . "<\\(.*\\)")
     (symbol . "t")
     (document . ac-source--html-tag-documentation)))
 
+;;;###autoload
 (defvar ac-source-html-attribute
   '((candidates . ac-source-html-attribute-candidates)
     (prefix . "<\\w[^>]*[[:space:]]+\\(.*\\)")
     (symbol . "a")
     (document . ac-source-html-attribute-documentation)))
 
+;;;###autoload
 (defvar ac-source-html-attribute-value
   '((candidates . ac-source-html-attribute-value-candidates)
     (prefix . ac-html-value-prefix)
