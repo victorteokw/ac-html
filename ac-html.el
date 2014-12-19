@@ -113,12 +113,15 @@ If not nil no need 'ac-source-css-property in web-mode-ac-sources-alist for web-
 
 (defun ac-html--load-list-from-file (filepath)
   "Return a list separated by \\n from FILEPATH."
-  (with-current-buffer (find-file-noselect filepath)
-    (split-string (save-restriction
-                    (widen)
-                    (buffer-substring-no-properties
-                     (point-min) (point-max)))
-                  "\n" t)))
+  (let (list)
+    (with-current-buffer (find-file-noselect filepath)
+      (setq list (split-string (save-restriction
+                                 (widen)
+                                 (buffer-substring-no-properties
+                                  (point-min) (point-max)))
+                               "\n" t))
+      (kill-buffer)
+      list)))
 
 (defvar ac-html-all-element-list
   (ac-html--load-list-from-file (expand-file-name "html-tag-list"
