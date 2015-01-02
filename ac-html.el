@@ -139,16 +139,16 @@ tail - filename"
                (setq path
                      (cond ((stringp path) path)
                            ((and (symbolp path)
-                                 (boundp path)
-                                 (stringp (symbol-value path)))
+                                 (boundp path))
                             (symbol-value path))
                            (t
                             (error "[ac-html] invalid element %s in\
  `ac-html-source-dirs'" path))))
-               (setq path (expand-file-name file-name path))
-               (when (file-exists-p path)
-                 (add-to-list 'return-files (cons (car alist) path))
-                 ))
+               (when path
+                 (setq path (expand-file-name file-name path))
+                 (when (file-exists-p path)
+                   (add-to-list 'return-files (cons (car alist) path))
+                   )))
            ac-html-source-dirs)
     return-files))
 
