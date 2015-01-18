@@ -12,14 +12,13 @@
           (funcall body)))))
 
 (ert-deftest test-ac-html--current-haml-tag ()
-  "Test `ac-html--current-haml-tag' correctly scan the tag user is typing on."
+  "Test `ac-haml-current-tag' correctly scan the tag user is typing on."
   (test-suite-haml-current-thing-scan
    (lambda ()
-     (should (equal (ac-html--current-haml-tag) "title")))))
+     (should (equal (ac-haml-current-tag) "title")))))
 
 (ert-deftest test-ac-source-haml-attribute-candidates ()
-  "Test `ac-source-haml-attribute-candidates' return correctly."
+  "Test `ac-haml-current-attribute' return correctly."
   (test-suite-haml-current-thing-scan
    (lambda ()
-     (should (equal (nth 2 (ac-source-haml-attribute-candidates))
-                    "contenteditable")))))
+     (should (member "class" (ac-source-haml-attribute-candidates))))))

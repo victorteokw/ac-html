@@ -12,14 +12,13 @@
           (funcall body)))))
 
 (ert-deftest test-ac-html--current-jade-tag ()
-  "Test `ac-html--current-haml-tag' correctly scan the tag user is typing on."
+  "Test `ac-jade-current-tag' correctly scan the tag user is typing on."
   (test-suite-jade-current-thing-scan
    (lambda ()
-     (should (equal (ac-html--current-jade-tag) "title")))))
+     (should (equal (ac-jade-current-tag) "title")))))
 
 (ert-deftest test-ac-source-jade-attribute-candidates ()
-  "Test `ac-source-haml-attribute-candidates' return correctly."
+  "Test `ac-source-jade-attribute-candidates' return correctly."
   (test-suite-jade-current-thing-scan
    (lambda ()
-     (should (equal (nth 2 (ac-source-jade-attribute-candidates))
-                    "contenteditable")))))
+     (should (member "class" (ac-source-jade-attribute-candidates))))))
