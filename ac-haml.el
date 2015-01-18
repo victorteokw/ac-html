@@ -31,37 +31,27 @@
 
 (require 'ac-html)
 
-(defun ac-html--current-haml-tag ()
+(defun ac-haml-current-tag ()
   "Return current haml tag user is typing on."
-  (let* ((tag-search (save-excursion
-                       (re-search-backward "%\\(\\w+\\)" nil t)))
-         (tag-string (match-string 1)))
-    tag-string))
+  (save-excursion (re-search-backward "%\\(\\w+\\)" nil t))
+  (match-string 1))
 
-(defun ac-html--current-haml-attribute ()
+(defun ac-haml-current-attribute ()
   "Return current html tag's attribute user is typing on."
-  (let* ((attr-search (save-excursion
-		       (re-search-backward "[^a-z-]\\([a-z-]+\\) *=" nil t)))
-	 (attr-string (match-string 1)))
-    attr-string))
+  (save-excursion (re-search-backward "[^a-z-]\\([a-z-]+\\) *=" nil t))
+  (match-string 1))
 
 (defun ac-source-haml-attribute-candidates ()
-  (ac-html--attribute-candidates (ac-html--current-haml-tag)))
+  (ac-html--attribute-candidates (ac-haml-current-tag)
+				 #'(lambda (symbol)
+				     (ac-html--attribute-documentation symbol (ac-haml-current-tag)))))
 
 (defun ac-source-haml-tag-candidates ()
-  ac-html-all-element-list)
-
-(defun ac-source-haml-attribute-documentation (symbol)
-  (ac-html--attribute-documentation symbol
-                                    (ac-html--current-haml-tag)))
+  (ac-html--tags))
 
 (defun ac-source-haml-value-candidates ()
   (ac-source--html-attribute-values
-   (ac-html--current-haml-tag) (ac-html--current-haml-attribute)))
-
-(defun ac-source-haml-attribute-value-document (symbol)
-  (ac-source--html-attribute-value-document symbol
-                                            (ac-html--current-haml-tag) (ac-html--current-haml-attribute)))
+   (ac-haml-current-tag) (ac-haml-current-attribute)))
 
 (defun ac-haml-value-prefix ()
   ;; %foo{ bar => ""}
@@ -72,21 +62,17 @@
 (defvar ac-source-haml-tag
   '((candidates . ac-source-haml-tag-candidates)
     (prefix . "%\\(.*\\)")
-    (symbol . "t")
-    (document . ac-source--html-tag-documentation)))
+    (symbol . "t")))
 
 (defvar ac-source-haml-attribute
   '((candidates . ac-source-haml-attribute-candidates)
     (prefix . ":\\(.*\\)")
-    (symbol . "a")
-    (document . ac-source-haml-attribute-documentation)))
+    (symbol . "a")))
 
 (defvar ac-source-haml-attribute-value
   '((candidates . ac-source-haml-value-candidates)
     (prefix . ac-haml-value-prefix)
-    (symbol . "v")
-    (document . ac-source-haml-attribute-value-document)
-    ))
+    (symbol . "v")))
 
 ;;;###autoload
 (defun ac-haml-enable ()

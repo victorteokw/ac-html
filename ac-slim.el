@@ -30,39 +30,32 @@
 
 (require 'ac-html)
 
-(defun ac-html--current-slim-tag ()
+(defun ac-slim-current-tag ()
   "Return current slim tag user is typing on."
-  (let* ((tag-search (save-excursion
-                       (re-search-backward "^[\t ]*\\(\\w+\\)" nil t)))
-         (tag-string (match-string 1)))
-    tag-string))
+  (save-excursion (re-search-backward "^[\t ]*\\(\\w+\\)" nil t))
+  (match-string 1))
 
-(defun ac-html--current-slim-attribute ()
+(defun ac-slim--current-attribute ()
   "Return current html tag's attribute user is typing on."
-  (let* ((attr-search (save-excursion
-		       (re-search-backward "[^a-z-]\\([a-z-]+\\) *=" nil t)))
-	 (attr-string (match-string 1)))
-    attr-string))
+  (save-excursion (re-search-backward "[^a-z-]\\([a-z-]+\\) *=" nil t))
+  (match-string 1))
 
 (defun ac-source-slim-attribute-candidates ()
-  (ac-html--attribute-candidates (ac-html--current-slim-tag)))
+  (ac-html--attribute-candidates (ac-slim-current-tag)
+				 #'(lambda (symbol)
+				     (ac-html--attribute-documentation symbol (ac-slim-current-tag)))))
 
 (defun ac-source-slim-tag-candidates ()
-  ac-html-all-element-list)
+  (ac-html--tags))
 
 (defun ac-source-slim-attribute-documentation (symbol)
   (ac-html--attribute-documentation symbol
-                                    (ac-html--current-slim-tag)))
+                                    (ac-slim-current-tag)))
 
 (defun ac-source-slim-value-candidates ()
   (ac-source--html-attribute-values
-    (ac-html--current-slim-tag) (ac-html--current-slim-attribute))
+    (ac-slim-current-tag) (ac-slim--current-attribute))
   )
-
-(defun ac-source-slim-attribute-value-document (symbol)
-  (ac-source--html-attribute-value-document symbol
-                                            (ac-html--current-slim-tag) (ac-html--current-slim-attribute)))
-
 
 (defun ac-slim-value-prefix ()
   (if (re-search-backward "\\w *= *[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
@@ -71,22 +64,17 @@
 (defvar ac-source-slim-tag
   '((candidates . ac-source-slim-tag-candidates)
     (prefix . "^[\t ]*\\(.*\\)")
-    (symbol . "t")
-    (document . ac-source--html-tag-documentation)))
+    (symbol . "t")))
 
 (defvar ac-source-slim-attribute
   '((candidates . ac-source-slim-attribute-candidates)
     (prefix . " \\(.*\\)")
-    (symbol . "a")
-    (document . ac-source-slim-attribute-documentation)
-))
+    (symbol . "a")))
 
 (defvar ac-source-slim-attribute-value
   '((candidates . ac-source-slim-value-candidates)
     (prefix . ac-slim-value-prefix)
-    (symbol . "v")
-    (document . ac-source-slim-attribute-value-document)
-    ))
+    (symbol . "v")))
 
 ;;;###autoload
 (defun ac-slim-enable ()
