@@ -2,6 +2,19 @@
 
 ;;; Core test
 
+(ert-deftest test-ac-html--flatten-returns-nil ()
+  "`ac-html--flatten' should return nil when argument is nil."
+  (should (null (ac-html--flatten nil))))
+
+(ert-deftest test-ac-html--flatten-returns-list ()
+  "`ac-html--flatten' should return list of argument when argument is atom."
+  (should (equal (ac-html--flatten "wtf") '("wtf"))))
+
+(ert-deftest test-ac-html--flatten-returns-flatten-list ()
+  "`ac-html--flatten' should return list of argument when argument is atom."
+  (should (equal (ac-html--flatten
+                  '(1 2 (3 (((4))) 5 ((6)) 7) 8)) '(1 2 3 4 5 6 7 8))))
+
 (setq ac-html-source-dirs (list (cons "html01" (expand-file-name "test/fixtures/01" ac-html-package-dir))
 				(cons "html02" (expand-file-name "test/fixtures/02" ac-html-package-dir))))
 
