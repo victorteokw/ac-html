@@ -51,6 +51,11 @@ A list of contributors is listed [here](https://github.com/cheunghy/ac-html/grap
 
 Requested features and bad bugs are listed in issues.
 
+### Related projects
+You may be interested in next projects:
+- [ac-html-bootstrap](https://github.com/osv/ac-html-bootstrap) - Twitter:Bootstrap support for ac-html.
+- [ac-html-csswatcher](https://github.com/osv/ac-html-csswatcher) - CSS/Less support for ac-html
+
 [melpa-link]: http://melpa.org/#/ac-html
 [melpa-badge]: http://melpa.org/packages/ac-html-badge.svg
 [melpa-stable-link]: http://stable.melpa.org/#/ac-html
