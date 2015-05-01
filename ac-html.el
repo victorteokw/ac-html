@@ -46,28 +46,13 @@
 (require 'auto-complete)
 (require 'auto-complete-config)
 (require 'cl)
-
-(defconst ac-html-package-dir
-  (file-name-directory (or load-file-name (buffer-file-name)))
-  "The directory where `ac-html' package exists.")
-
-(defconst ac-html-basic-source-dir
-  (expand-file-name "html-stuff" ac-html-package-dir)
-  "The directory where basic completion source of `ac-html' exists.")
-
+(require 'ac-html-complete-data)
 ;;; Customization
 
 (defgroup auto-complete-html nil
   "HTML Auto Complete."
   :group 'auto-complete
   :prefix "ac-html-")
-
-(defcustom ac-html-source-dirs
-  '(("html" . ac-html-basic-source-dir))
-  "Alist support for multisource directories. 
-car is source name, cdr is source location."
-  :type 'alist
-  :group 'auto-complete-html)
 
 (defcustom ac-html-complete-css t
   "Enable style attribute CSS autocomplete."
