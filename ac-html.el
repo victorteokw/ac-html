@@ -206,22 +206,6 @@ DOCUMENTATION is string or function."
             doc
           "Currently not documented.")))))
 
-(defvar ac-html-all-element-list
-  (ac-html--load-list-from-file (expand-file-name "html-tag-list"
-                                                  ac-html-basic-source-dir)))
-
-(defun ac-source--html-tag-documentation (symbol)
-  (let* ((where-to-find
-          (expand-file-name "html-tag-short-docs"
-                            ac-html-basic-source-dir))
-         (doc-file (expand-file-name symbol where-to-find)))
-    (if (file-exists-p doc-file)
-        (progn
-          (with-temp-buffer
-            (insert-file-contents doc-file)
-            (buffer-string)))
-      "Currently not documented.")))
-
 (defun ac-html--check-string-face ()
   "t if text's face(s) at point is in `ac-html-string-check-faces'."
   (let ((faces (get-text-property (point) 'face)))
