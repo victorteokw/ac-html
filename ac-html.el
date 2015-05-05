@@ -5,7 +5,7 @@
 ;; Author: Zhang Kai Yu <yeannylam@gmail.com>
 ;; Version: 0.3
 ;; Keywords: html, auto-complete, rails, ruby
-;; Package-Requires: ((auto-complete "1.4"))
+;; Package-Requires: ((auto-complete "1.4") (web-completion-data "0.1"))
 ;; URL: https://github.com/cheunghy/ac-html
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -46,7 +46,8 @@
 (require 'auto-complete)
 (require 'auto-complete-config)
 (require 'cl)
-(require 'ac-html-complete-data)
+(require 'web-completion-data)
+
 ;;; Customization
 
 (defgroup auto-complete-html nil
@@ -116,7 +117,7 @@
 
 (defun ac-html--all-files-named (file-name)
   "Get a list of file named FILE-NAME in all directory specified by
- `ac-html-source-dirs'.
+ `web-completion-data-sources'.
 
 Returns an alist. car is source name, cdr is the file path."
   (let (return-files source-dir-path)
@@ -129,13 +130,13 @@ Returns an alist. car is source name, cdr is the file path."
                          (symbol-value source-dir-path))
                         (t
                          (error "[ac-html] invalid element %s in\
- `ac-html-source-dirs'" source-dir-path))))
+ `web-completion-data-sources'" source-dir-path))))
             (when source-dir-path
               (setq source-dir-path (expand-file-name file-name source-dir-path))
               (when (file-exists-p source-dir-path)
                 (add-to-list 'return-files (cons (car name-dir-cons-cell) source-dir-path))
                 )))
-          ac-html-source-dirs)
+          web-completion-data-sources)
     return-files))
 
 (defun ac-html--flatten (wtf)
@@ -172,7 +173,7 @@ DOCUMENTATION is string or function."
             items)))
 
 (defun ac-html--read-file (file-in-source-dir)
-  "Return string content of FILE-IN-SOURCE-DIR from `ac-html-source-dirs'."
+  "Return string content of FILE-IN-SOURCE-DIR from `web-completion-data-sources'."
   (let ((file (cdr (nth 0 (ac-html--all-files-named file-in-source-dir)))))
     ;; Just read from the first file.
     (when file

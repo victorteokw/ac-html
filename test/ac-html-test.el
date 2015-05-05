@@ -48,7 +48,7 @@ It should return correctly."
  test/fixtures/01/html-tag-list and
  test/fixtures/02/html-tag-list 
 
-But fixtures/02 is second in list `ac-html-source-dirs' and summary must be html02.
+But fixtures/02 is second in list `web-completion-data-sources' and summary must be html02.
 Other \"XXXX-override\" test are same thing.
 "
   (let* ((tag-list (ac-html--tags)))
