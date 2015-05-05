@@ -15,8 +15,8 @@
   (should (equal (ac-html--flatten
                   '(1 2 (3 (((4))) 5 ((6)) 7) 8)) '(1 2 3 4 5 6 7 8))))
 
-(setq ac-html-source-dirs (list (cons "html01" (expand-file-name "test/fixtures/01" ac-html-package-dir))
-				(cons "html02" (expand-file-name "test/fixtures/02" ac-html-package-dir))))
+(setq web-completion-data-sources (list (cons "html01" (expand-file-name "fixtures/01" ac-html-test-dir))
+				(cons "html02" (expand-file-name "fixtures/02" ac-html-test-dir))))
 
 (defun test-suite-summary (item items)
   "Helper. Popup summary of ITEM in list ITEMS"
