@@ -3,9 +3,9 @@
 ;; Copyright (C) 2014 Zhang Kai Yu
 
 ;; Author: Zhang Kai Yu <yeannylam@gmail.com>
-;; Version: 0.31
+;; Version: 0.32
 ;; Keywords: html, auto-complete, rails, ruby
-;; Package-Requires: ((auto-complete "1.4") (web-completion-data "0.1"))
+;; Package-Requires: ((auto-complete "1.4") (dash "2.8.0") (web-completion-data "0.1"))
 ;; URL: https://github.com/cheunghy/ac-html
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -46,6 +46,7 @@
 (require 'auto-complete)
 (require 'auto-complete-config)
 (require 'cl)
+(require 'dash)
 (require 'web-completion-data)
 
 ;;; Customization
@@ -139,13 +140,6 @@ Returns an alist. car is source name, cdr is the file path."
           web-completion-data-sources)
     return-files))
 
-(defun ac-html--flatten (wtf)
-  "Flatten WTF, into a list."
-  (cond ((null wtf) nil)
-        ((atom wtf) (list wtf))
-        (t (append (ac-html--flatten (car wtf))
-                   (ac-html--flatten (cdr wtf))))))
-
 (defun ac-html--make-popup-items (summary items documentation)
   "Make popup-item for each item with SUMMARY.
 
@@ -182,7 +176,7 @@ DOCUMENTATION is string or function."
         (buffer-string)))))
 
 (defun ac-html--tags ()
-  (ac-html--flatten
+  (-flatten
    (mapcar (lambda (source-name-and-file-path)
              (ac-html--make-popup-items
               (car source-name-and-file-path)
@@ -237,7 +231,7 @@ DOCUMENTATION is string or function."
                               ))
                            (ac-html--all-files-named
                             (concat "html-attributes-list/" tag-string))))
-      (ac-html--flatten items))))
+      (-flatten items))))
 
 (defun ac-source--html-values-internal (tag-string attribute-string)
   "Read html-stuff/html-attributes-complete/global-<ATTRIBUTE>
@@ -263,7 +257,7 @@ Those files may have documantation delimited by \" \" symbol."
                          (ac-html--all-files-named
                           (format "html-attributes-complete/%s-%s" tag-string
                                   attribute-string))))
-    (ac-html--flatten items)))
+    (-flatten items)))
 
 (defun ac-source--html-attribute-values (tag-string attribute-string)
   (if (and ac-html-complete-css
