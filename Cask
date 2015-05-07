@@ -2,6 +2,7 @@
 (source melpa)
 
 (depends-on "auto-complete")
+(depends-on "dash")
 (depends-on "web-completion-data")
 
 (development
