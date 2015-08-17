@@ -1,6 +1,6 @@
 ;;; ac-slim.el --- auto complete source for html tag and attributes
 
-;; Copyright (C) 2014 Zhang Kai Yu, Olexandr Sydorchuck
+;; Copyright (C) 2014 - 2015 Zhang Kai Yu, Olexandr Sydorchuck
 
 ;; Author: Zhang Kai Yu <yeannylam@gmail.com>
 ;; Keywords: html, auto-complete, slim, ruby
@@ -23,7 +23,7 @@
 ;; Configuration:
 ;;
 ;; Add to hook `ac-slim-enable'
-;; 
+;;
 ;; (add-hook 'slim-mode-hook 'ac-slim-enable)
 
 ;;; Code:
@@ -42,8 +42,8 @@
 
 (defun ac-source-slim-attribute-candidates ()
   (ac-html--attribute-candidates (ac-slim-current-tag)
-				 #'(lambda (symbol)
-				     (ac-html--attribute-documentation symbol (ac-slim-current-tag)))))
+         #'(lambda (symbol)
+             (ac-html--attribute-documentation symbol (ac-slim-current-tag)))))
 
 (defun ac-source-slim-tag-candidates ()
   (ac-html--tags))
@@ -81,9 +81,9 @@
   "Add ac-slim sources into ac-sources and enable auto-comple-mode"
   (interactive)
   (mapc (lambda (source)
-	  (if (not (memq source ac-sources))
-	      (add-to-list 'ac-sources source)))
-	'(ac-source-slim-attribute-value ac-source-slim-attribute ac-source-slim-tag))
+    (if (not (memq source ac-sources))
+        (add-to-list 'ac-sources source)))
+  '(ac-source-slim-attribute-value ac-source-slim-attribute ac-source-slim-tag))
 
   ;; ac-source-slim-attribute-value complete in font-lock-string-face, must not be disabled
   (make-local-variable 'ac-disable-faces)

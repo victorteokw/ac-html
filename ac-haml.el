@@ -1,6 +1,6 @@
 ;;; ac-haml.el --- auto complete source for html tag and attributes
 
-;; Copyright (C) 2014 Zhang Kai Yu
+;; Copyright (C) 2014 - 2015 Zhang Kai Yu
 
 ;; Author: Zhang Kai Yu <yeannylam@gmail.com>
 ;; Keywords: html, auto-complete, rails, ruby
@@ -23,7 +23,7 @@
 ;; Configuration:
 ;;
 ;; Add to hook `ac-haml-enable'
-;; 
+;;
 ;; (add-hook 'haml-mode-hook 'ac-haml-enable)
 
 
@@ -43,8 +43,8 @@
 
 (defun ac-source-haml-attribute-candidates ()
   (ac-html--attribute-candidates (ac-haml-current-tag)
-				 #'(lambda (symbol)
-				     (ac-html--attribute-documentation symbol (ac-haml-current-tag)))))
+         #'(lambda (symbol)
+             (ac-html--attribute-documentation symbol (ac-haml-current-tag)))))
 
 (defun ac-source-haml-tag-candidates ()
   (ac-html--tags))
@@ -79,9 +79,9 @@
   "Add ac-haml sources into ac-sources and enable auto-comple-mode"
   (interactive)
   (mapc (lambda (source)
-	  (if (not (memq source ac-sources))
-	      (add-to-list 'ac-sources source)))
-	'(ac-source-haml-attribute-value ac-source-haml-attribute ac-source-haml-tag))
+    (if (not (memq source ac-sources))
+        (add-to-list 'ac-sources source)))
+  '(ac-source-haml-attribute-value ac-source-haml-attribute ac-source-haml-tag))
 
   ;; ac-source-haml-attribute-value complete in font-lock-string-face, must not be disabled
   (make-local-variable 'ac-disable-faces)
