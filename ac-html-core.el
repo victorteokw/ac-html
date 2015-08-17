@@ -160,15 +160,33 @@
 
 (defun ac-html-tag-documentation (tag)
   "Not documented yet."
-  )
+  (catch 'return-val
+    (let (doc func)
+      (dolist (provider ac-html-enabled-providers)
+        (setq func (ac-html-query-data-provider provider :tag-doc-func))
+        (setq doc (funcall func tag))
+        (if doc (throw 'return-val doc))))))
 
 (defun ac-html-attr-documentation (attr)
   "Not documented yet."
-  )
+  (catch 'return-val
+    (let (doc func tag)
+      (dolist (provider ac-html-enabled-providers)
+        (setq func (ac-html-query-data-provider provider :attr-doc-func))
+        (setq tag (funcall ac-html-current-tag-function))
+        (setq doc (funcall func tag attr))
+        (if doc (throw 'return-val doc))))))
 
 (defun ac-html-attrv-documentation (attrv)
   "Not documented yet."
-  )
+  (catch 'return-val
+    (let (doc func tag attr)
+      (dolist (provider ac-html-enabled-providers)
+        (setq func (ac-html-query-data-provider provider :attrv-doc-func))
+        (setq tag (funcall ac-html-current-tag-function))
+        (setq attr (funcall ac-html-current-attr-function))
+        (setq doc (funcall func tag attr attrv))
+        (if doc (throw 'return-val doc))))))
 
 (provide 'ac-html-core)
 ;;; ac-html-core.el ends here
