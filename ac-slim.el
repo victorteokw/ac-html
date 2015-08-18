@@ -28,67 +28,28 @@
 
 ;;; Code:
 
-(require 'ac-html)
+(require 'ac-html-core)
 
 (defun ac-slim-current-tag ()
   "Return current slim tag user is typing on."
   (save-excursion (re-search-backward "^[\t ]*\\(\\w+\\)" nil t))
   (match-string 1))
 
-(defun ac-slim--current-attribute ()
+(defun ac-slim-current-attr ()
   "Return current html tag's attribute user is typing on."
   (save-excursion (re-search-backward "[^a-z-]\\([a-z-]+\\) *=" nil t))
   (match-string 1))
-
-(defun ac-source-slim-attribute-candidates ()
-  (ac-html--attribute-candidates (ac-slim-current-tag)
-         #'(lambda (symbol)
-             (ac-html--attribute-documentation symbol (ac-slim-current-tag)))))
-
-(defun ac-source-slim-tag-candidates ()
-  (ac-html--tags))
-
-(defun ac-source-slim-attribute-documentation (symbol)
-  (ac-html--attribute-documentation symbol
-                                    (ac-slim-current-tag)))
-
-(defun ac-source-slim-value-candidates ()
-  (ac-source--html-attribute-values
-    (ac-slim-current-tag) (ac-slim--current-attribute))
-  )
 
 (defun ac-slim-value-prefix ()
   (if (re-search-backward "\\w *= *[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
       (match-beginning 2)))
 
-(defvar ac-source-slim-tag
-  '((candidates . ac-source-slim-tag-candidates)
-    (prefix . "^[\t ]*\\(.*\\)")
-    (symbol . "t")))
-
-(defvar ac-source-slim-attribute
-  '((candidates . ac-source-slim-attribute-candidates)
-    (prefix . " \\(.*\\)")
-    (symbol . "a")))
-
-(defvar ac-source-slim-attribute-value
-  '((candidates . ac-source-slim-value-candidates)
-    (prefix . ac-slim-value-prefix)
-    (symbol . "v")))
-
-;;;###autoload
-(defun ac-slim-enable ()
-  "Add ac-slim sources into ac-sources and enable auto-comple-mode"
-  (interactive)
-  (mapc (lambda (source)
-    (if (not (memq source ac-sources))
-        (add-to-list 'ac-sources source)))
-  '(ac-source-slim-attribute-value ac-source-slim-attribute ac-source-slim-tag))
-
-  ;; ac-source-slim-attribute-value complete in font-lock-string-face, must not be disabled
-  (make-local-variable 'ac-disable-faces)
-  (setq ac-disable-faces (remove 'font-lock-string-face ac-disable-faces))
-  (auto-complete-mode t))
+(ac-html-define-ac-source "slim"
+  :tag-prefix "^[\t ]*\\(.*\\)"
+  :attr-prefix " \\(.*\\)"
+  :attrv-prefix ac-slim-value-prefix
+  :current-tag-func ac-slim-current-tag
+  :current-attr-func ac-slim-currnt-attr)
 
 (provide 'ac-slim)
 ;;; ac-slim.el ends here

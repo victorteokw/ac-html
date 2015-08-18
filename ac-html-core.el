@@ -23,6 +23,16 @@
 
 ;;; Code:
 
+(require 'auto-complete)
+(require 'cl)
+
+;;; Customization
+
+(defgroup auto-complete-html nil
+  "HTML Auto Complete."
+  :group 'auto-complete
+  :prefix "ac-html-")
+
 ;;; Unused
 
 (defvar ac-html-user-defined-class-list nil "User defined class list.")
@@ -44,18 +54,6 @@
 
 ;;; Provider
 
-;; Macro usage
-;; (ac-html-define-data-provider "ac-html-default-data-provider"
-;;   :tag-func 'ac-html-default-tags
-;;   :attr-func 'ac-html-default-attrs
-;;   :attrv-func 'ac-html-default-attrvs
-;;   :id-func 'ac-html-default-ids
-;;   :class-func 'ac-html-default-classes
-;;   :tag-doc-func 'ac-html-default-tag-doc
-;;   :attr-doc-func 'ac-html-default-attr-doc
-;;   :attrv-doc-func 'ac-html-default-attrv-doc
-;;   :id-doc-func 'ac-html-default-id-doc
-;;   :class-doc-func 'ac-html-default-class-doc)
 (defmacro ac-html-define-data-provider (name &rest pairs)
   "Define ac-html data provider with this macro."
   (declare (indent 1) (debug t))
@@ -117,19 +115,6 @@
     ))
 
 ;;; Data
-
-;; Macro usage
-;; (ac-html-define-data-provider "ac-html-default-data-provider"
-;;   :tag-func 'ac-html-default-tags
-;;   :attr-func 'ac-html-default-attrs
-;;   :attrv-func 'ac-html-default-attrvs
-;;   :id-func 'ac-html-default-ids
-;;   :class-func 'ac-html-default-classes
-;;   :tag-doc-func 'ac-html-default-tag-doc
-;;   :attr-doc-func 'ac-html-default-attr-doc
-;;   :attrv-doc-func 'ac-html-default-attrv-doc
-;;   :id-doc-func 'ac-html-default-id-doc
-;;   :class-doc-func 'ac-html-default-class-doc)
 
 (defun ac-html-all-tag-candidates ()
   "All tag candidates get from data providers."

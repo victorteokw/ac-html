@@ -49,20 +49,26 @@
   (f-expand (format "%s-%s-%s" tag attr (url-hexify-string attrv))
             web-completion-data-attrv-doc-dir))
 
+;;; cached data
+
 (defvar ac-html--tags-list nil "The list of tags.")
 (defvar ac-html--global-attributes nil "The list of global attrs.")
 (defvar ac-html--cached-attributes-alist nil)
 
+;;; helper functions
+
 (defun ac-html--load-list-from-file (filepath)
   "Return a list separated by \\n from FILEPATH."
-  (with-current-buffer (find-file-noselect filepath)
-    (unwind-protect
-        (split-string
-         (save-restriction
-           (widen)
-           (buffer-substring-no-properties (point-min) (point-max)))
-         "\n" t)
-      (kill-buffer))))
+  (if (file-exists-p filepath)
+      (with-current-buffer (find-file-noselect filepath)
+        (unwind-protect
+            (split-string
+             (save-restriction
+               (widen)
+               (buffer-substring-no-properties (point-min) (point-max)))
+             "\n" t)
+          (kill-buffer)))
+    nil))
 
 (defun ac-html--read-file (file-in-source-dir)
   "Return string content of FILE-IN-SOURCE-DIR from `web-completion-data-sources'."
@@ -73,32 +79,40 @@
         (insert-file-contents file)
         (buffer-string)))))
 
+;;; functions
+
 (defun ac-html-default-tags ()
   (if ac-html--tags-list
       ac-html--tags-list
     (setq ac-html--tags-list
-          (ac-html--load-list-from-file
-           (f-expand "html-tag-list" web-completion-data-html-source-dir)))
-    ac-html--tags-list))
+          (ac-html--load-list-from-file web-completion-data-tag-list-file))))
 
 (defun ac-html-default-attrs (tag)
   (unless ac-html--global-attributes
     (setq ac-html--global-attributes
           (ac-html--load-list-from-file
-           (f-expand "html-attributes-list/global"
-                     web-completion-data-html-source-dir))))
+           web-completion-data-attr-global-list-file)))
   (let (list attr-file)
-    (setq attr-file (f-expand (format "html-attributes-list/%s" tag)
-                              web-completion-data-html-source-dir))
+    (setq attr-file (web-completion-data-attr-list-file tag))
     (if (file-exists-p attr-file)
         (setq list (ac-html--load-list-from-file
                     attr-file)))
     (append list ac-html--global-attributes)))
 
 (defun ac-html-default-attrvs (tag attr)
-  '("sample" "sabcde" "sfghij"))
+  (append
+   (ac-html--load-list-from-file
+    (web-completion-data-attrv-list-file tag attr))
+   (ac-html--load-list-from-file
+    (web-completion-data-attrv-global-list-file attr))))
 
 (defun ac-html-default-tag-doc (tag)
+  )
+
+(defun ac-html-default-attr-doc (tag attr)
+  )
+
+(defun ac-html-default-attrv-doc (tag attr attrv)
   )
 
 (ac-html-define-data-provider "ac-html-default-data-provider"
