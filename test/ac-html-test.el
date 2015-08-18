@@ -15,8 +15,8 @@
   (should (equal (ac-html--flatten
                   '(1 2 (3 (((4))) 5 ((6)) 7) 8)) '(1 2 3 4 5 6 7 8))))
 
-(setq web-completion-data-sources (list (cons "html01" (expand-file-name "fixtures/01" ac-html-test-dir))
-				(cons "html02" (expand-file-name "fixtures/02" ac-html-test-dir))))
+(setq web-completion-data-sources (list (cons "html01" (expand-file-name "fixtures/01" ac-html-test-path))
+                                        (cons "html02" (expand-file-name "fixtures/02" ac-html-test-path))))
 
 (defun test-suite-summary (item items)
   "Helper. Popup summary of ITEM in list ITEMS"
@@ -46,7 +46,7 @@ It should return correctly."
 (ert-deftest test-ac-html-tags-summary-override ()
   "There are divs is in both html source dirs,
  test/fixtures/01/html-tag-list and
- test/fixtures/02/html-tag-list 
+ test/fixtures/02/html-tag-list
 
 But fixtures/02 is second in list `web-completion-data-sources' and summary must be html02.
 Other \"XXXX-override\" test are same thing.
@@ -107,10 +107,10 @@ But inline documentaion (inside \"html-tag-list\" file) have first priority"
 (ert-deftest test-ac-html-attribute-doc-inline ()
   "Documentaion of attributes"
   (should (string= "global inline class doc" (popup-item-documentation
-				  (car (member "class" (ac-html--attribute-candidates "fake_tag" "no-doc"))))))
+          (car (member "class" (ac-html--attribute-candidates "fake_tag" "no-doc"))))))
   ;; default test
   (should (string= "no-doc" (popup-item-documentation
-				  (car (member "id" (ac-html--attribute-candidates "fake_tag" "no-doc"))))))
+          (car (member "id" (ac-html--attribute-candidates "fake_tag" "no-doc"))))))
   )
 
 (ert-deftest test-ac-html-attribute-doc-override ()
@@ -119,12 +119,12 @@ But inline documentaion (inside \"html-tag-list\" file) have first priority"
 Use `ac-html--attribute-documentation' fun"
   ;; inline priority test
   (should (string= "inline doc for onstorage" (popup-item-documentation
-				  (car (member "onstorage" (ac-html--attribute-candidates "body" "no-doc"))))))
+          (car (member "onstorage" (ac-html--attribute-candidates "body" "no-doc"))))))
   ;; we have 2 documentaion for body onredo in both sources, secondary must be ok
   (should (string= "external doc for onredo, fixture 02" (popup-item-documentation
-				  (car (member "onredo" (ac-html--attribute-candidates "body"
-										       #'(lambda (symbol)
-											   (ac-html--attribute-documentation "onredo" "body")))))))))
+          (car (member "onredo" (ac-html--attribute-candidates "body"
+                           #'(lambda (symbol)
+                         (ac-html--attribute-documentation "onredo" "body")))))))))
 
 ;; attribute values
 
