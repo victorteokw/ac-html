@@ -49,6 +49,27 @@
              (expect (web-completion-data-attrv-doc-file "script" "type" "text/javascript")
                      (f-expand (url-hexify-string "script-type-text/javascript")
                                web-completion-data-attrv-doc-dir))))
+ (desc "tags completion"
+       (desc "ac-html-default-tags"
+             (expect (car (ac-html-default-tags))
+                     "a")
+             (expect (length (ac-html-default-tags))
+                     147)
+             (expect (nth 146 (ac-html-default-tags))
+                     "xmp"))
+       (desc "ac-html-default-attrs"
+             (expect (car (ac-html-default-attrs "a"))
+                     "download")
+             (expect (length (ac-html-default-attrs "a"))
+                     35)
+             (expect (nth 34 (ac-html-default-attrs "a"))
+                     "title"))
+       (desc "ac-html-default-attrvs"
+             (expect (car (ac-html-default-attrvs "a" "target"))
+                     "_blank")
+             (expect (length (ac-html-default-attrvs "a" "target"))
+                     4))
 
+       )
 
  )
