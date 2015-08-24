@@ -117,7 +117,7 @@
 (defun ac-html-default-attrv-doc (tag attr attrv)
   )
 
-(ac-html-define-data-provider "ac-html-default-data-provider"
+(ac-html-define-data-provider 'ac-html-default-data-provider
   :tag-func 'ac-html-default-tags
   :attr-func 'ac-html-default-attrs
   :attrv-func 'ac-html-default-attrvs
@@ -129,5 +129,6 @@
   :id-doc-func 'ac-html-default-id-doc
   :class-doc-func 'ac-html-default-class-doc)
 
+(get 'ac-html-default-data-provider 'tag-func)
 (provide 'ac-html-default-data-provider)
 ;;; ac-html-default-data-provider.el ends here

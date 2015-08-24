@@ -3,9 +3,9 @@
 ;; Copyright (C) 2014 - 2015 Zhang Kai Yu
 
 ;; Author: Zhang Kai Yu <yeannylam@gmail.com>
-;; Version: 0.31
+;; Version: 0.4
 ;; Keywords: html, auto-complete, slim, haml, jade
-;; Package-Requires: ((auto-complete "1.4") (web-completion-data "0.1"))
+;; Package-Requires: ((auto-complete "1.4") (s "1.9") (f "0.17") (dash "2.10"))
 ;; URL: https://github.com/cheunghy/ac-html
 
 ;; This program is free software; you can redistribute it and/or modify

@@ -54,18 +54,18 @@
 
 ;;; Provider
 
-(defmacro ac-html-define-data-provider (name &rest pairs)
+(defmacro ac-html-define-data-provider (provider &rest pairs)
   "Define ac-html data provider with this macro."
   (declare (indent 1) (debug t))
-  (let (this-provider)
-    (setq this-provider (intern name))
-    (add-to-list 'ac-html-data-providers this-provider t)
-    (cl-loop for (label value) on pairs by #'cddr
-             do (put this-provider label value))))
+  `(progn
+     (add-to-list 'ac-html-data-providers ,provider t)
+     (let ((pairs ,pairs))
+       (cl-loop for (label value) on pairs by #'cddr
+                do (put ,provider label value)))))
 
-(defmacro ac-html-enable-data-provider (provider)
+(defmacro ac-html-enable-data-provider (provider-name)
   "Enable data provider PROVIDER."
-  (add-to-list 'ac-html-enabled-providers provider))
+  (add-to-list 'ac-html-enabled-providers provider-name))
 
 (defmacro ac-html-query-data-provider (provider key)
   (get provider key))
