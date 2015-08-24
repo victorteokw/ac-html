@@ -1,4 +1,6 @@
-(require 'web-completion-data)
+(require 'f)
+(require 'web-completion-data (f-expand "../web-completion-data.el"
+                                        (or load-file-name (buffer-file-name))))
 
 ;;; web-completion-data helpers
 

@@ -11,7 +11,7 @@
           (goto-char 30)
           (funcall body)))))
 
-(ert-deftest test-ac-html--current-slim-tag ()
+(ert-deftest test-ac-slim-current-tag ()
   "Test `ac-slim-current-tag' correctly scan the tag user is typing on."
   (test-suite-slim-current-thing-scan
    (lambda ()
