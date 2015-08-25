@@ -7,5 +7,4 @@
 
 (development
  (depends-on "ert")
- (depends-on "yasnippet")
  (depends-on "ert-expectations"))
