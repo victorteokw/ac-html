@@ -49,7 +49,7 @@
   :attr-prefix " \\(.*\\)"
   :attrv-prefix ac-slim-value-prefix
   :current-tag-func ac-slim-current-tag
-  :current-attr-func ac-slim-currnt-attr)
+  :current-attr-func ac-slim-current-attr)
 
 (provide 'ac-slim)
 ;;; ac-slim.el ends here

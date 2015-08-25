@@ -87,9 +87,12 @@ This macro is buggy and cannot be used now."
         (and (equal :attrv-prefix label) (setq attrv-prefix value))
         (and (equal :current-tag-func label) (setq current-tag-func value))
         (and (equal :current-attr-func label) (setq current-attr-func value))))
-    (setq ac-html-current-tag-function current-tag-func)
-    (setq ac-html-current-attr-function current-attr-func)
+
     `(progn
+       (defun ,(intern (format "ac-%s-setup" lang)) ()
+         "ac html setup."
+         (setq ac-html-current-tag-function (quote ,current-tag-func))
+         (setq ac-html-current-attr-function (quote ,current-attr-func)))
        (ac-define-source ,(format "%s-%s" lang "tag")
          '((candidates . ac-html-all-tag-candidates)
            (prefix . ,tag-prefix)
