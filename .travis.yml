@@ -14,4 +14,4 @@ env:
 
 script:
   - emacs --version
-  - make unittest
+  - make test

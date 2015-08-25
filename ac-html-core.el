@@ -72,15 +72,7 @@ This macro is buggy and cannot be used now."
 (defun ac-html-query-data-provider (provider key)
   (get provider key))
 
-;;; Language
-
-;; Macro usage
-;; (ac-html-define-ac-source "html"
-;;                           :tag-prefix "<\\(.*\\)"
-;;                           :attr-prefix "<\\w[^>]*[[:space:]]+\\(.*\\)"
-;;                           :attrv-prefix "sdfsdfsdf"
-;;                           :current-tag-func
-;;                           :current-attr-func)
+;;; Language (Adaptor)
 
 (defmacro ac-html-define-ac-source (lang &rest pairs)
   "Define ac-html lang with this macro."

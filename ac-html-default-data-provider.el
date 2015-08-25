@@ -73,14 +73,13 @@
           (kill-buffer)))
     nil))
 
-(defun ac-html--read-file (file-in-source-dir)
-  "Return string content of FILE-IN-SOURCE-DIR from `web-completion-data-sources'."
-  (let ((file (cdr (nth 0 (ac-html--all-files-named file-in-source-dir)))))
-    ;; Just read from the first file.
-    (when file
+(defun ac-html--read-file (file)
+  "If file exist, return string of contents, otherwise return nil."
+  (if (file-exists-p file)
       (with-temp-buffer
         (insert-file-contents file)
-        (buffer-string)))))
+        (buffer-string))
+    nil))
 
 ;;; functions
 
@@ -110,13 +109,16 @@
     (web-completion-data-attrv-global-list-file attr))))
 
 (defun ac-html-default-tag-doc (tag)
-  )
+  (ac-html--read-file (web-completion-data-tag-doc-file tag)))
 
 (defun ac-html-default-attr-doc (tag attr)
-  )
+  (or (ac-html--read-file (web-completion-data-attr-doc-file tag attr))
+      (ac-html--read-file (web-completion-data-attr-global-doc-file attr))))
 
 (defun ac-html-default-attrv-doc (tag attr attrv)
-  )
+  (or (ac-html--read-file (web-completion-data-attrv-doc-file tag attr attrv))
+      (ac-html--read-file
+       (web-completion-data-attrv-global-doc-file attr attrv))))
 
 (add-to-list 'ac-html-enabled-providers 'ac-html-default-data-provider)
 (put 'ac-html-default-data-provider :tag-func 'ac-html-default-tags)
