@@ -28,10 +28,3 @@
    (lambda ()
      (goto-char 20)
      (should (equal (ac-html-current-tag) "head")))))
-
-(ert-deftest test-ac-html--current-html-attribute ()
-  "Test `ac-html--current-html-attribute' correctly scan the attribute."
-  (test-suite-html-current-thing-scan
-   (lambda ()
-     (goto-char 29)
-     (should (equal (ac-html-current-attribute) "lang")))))

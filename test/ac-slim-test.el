@@ -16,9 +16,3 @@
   (test-suite-slim-current-thing-scan
    (lambda ()
      (should (equal (ac-slim-current-tag) "title")))))
-
-(ert-deftest test-ac-source-slim-attribute-candidates ()
-  "Test `ac-source-slim-attribute-candidates' return correctly."
-  (test-suite-slim-current-thing-scan
-   (lambda ()
-     (should (member "class" (ac-source-slim-attribute-candidates))))))

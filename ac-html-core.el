@@ -54,8 +54,10 @@
 
 ;;; Provider
 
+;; This does not work yet.
 (defmacro ac-html-define-data-provider (provider &rest pairs)
-  "Define ac-html data provider with this macro."
+  "Define ac-html data provider with this macro.
+This macro is buggy and cannot be used now."
   (declare (indent 1) (debug t))
   `(progn
      (add-to-list 'ac-html-data-providers ,provider t)
@@ -63,11 +65,11 @@
        (cl-loop for (label value) on pairs by #'cddr
                 do (put ,provider label value)))))
 
-(defmacro ac-html-enable-data-provider (provider-name)
+(defun ac-html-enable-data-provider (provider)
   "Enable data provider PROVIDER."
-  (add-to-list 'ac-html-enabled-providers provider-name))
+  (add-to-list 'ac-html-enabled-providers provider))
 
-(defmacro ac-html-query-data-provider (provider key)
+(defun ac-html-query-data-provider (provider key)
   (get provider key))
 
 ;;; Language
