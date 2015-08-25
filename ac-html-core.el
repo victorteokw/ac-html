@@ -90,7 +90,7 @@ This macro is buggy and cannot be used now."
 
     `(progn
        (defun ,(intern (format "ac-%s-setup" lang)) ()
-         "ac html setup."
+         ,(format "Setup for ac-html to provide completion for %s language." lang)
          (setq ac-html-current-tag-function (quote ,current-tag-func))
          (setq ac-html-current-attr-function (quote ,current-attr-func)))
        (ac-define-source ,(format "%s-%s" lang "tag")
