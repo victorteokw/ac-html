@@ -120,17 +120,13 @@
       (ac-html--read-file
        (web-completion-data-attrv-global-doc-file attr attrv))))
 
-(add-to-list 'ac-html-enabled-providers 'ac-html-default-data-provider)
-(put 'ac-html-default-data-provider :tag-func 'ac-html-default-tags)
-(put 'ac-html-default-data-provider :attr-func 'ac-html-default-attrs)
-(put 'ac-html-default-data-provider :attrv-func 'ac-html-default-attrvs)
-(put 'ac-html-default-data-provider :id-func 'ac-html-default-ids)
-(put 'ac-html-default-data-provider :class-func 'ac-html-default-classes)
-(put 'ac-html-default-data-provider :tag-doc-func 'ac-html-default-tag-doc)
-(put 'ac-html-default-data-provider :attr-doc-func 'ac-html-default-attr-doc)
-(put 'ac-html-default-data-provider :attrv-doc-func 'ac-html-default-attrv-doc)
-(put 'ac-html-default-data-provider :id-doc-func 'ac-html-default-id-doc)
-(put 'ac-html-default-data-provider :class-doc-func 'ac-html-default-class-doc)
+(ac-html-define-data-provider 'ac-html-default-data-provider
+  :tag-func 'ac-html-default-tags
+  :attr-func 'ac-html-default-attrs
+  :attrv-func 'ac-html-default-attrvs
+  :tag-doc-func 'ac-html-default-tag-doc
+  :attr-doc-func 'ac-html-default-attr-doc
+  :attrv-doc-func 'ac-html-default-attrv-doc)
 
 (provide 'ac-html-default-data-provider)
 ;;; ac-html-default-data-provider.el ends here
