@@ -29,28 +29,56 @@
 
 (require 'ac-html-core)
 
+(defun ac-html--inside-attrv ()
+  "Return t if cursor inside attrv aka string.
+Has bug for quoted quote."
+  (save-match-data
+    (save-excursion
+      (re-search-backward "\\w+[\n\t ]*=[\n\t ]*[\"']\\([^\"']*\\)" nil t))
+    (equal (match-end 1) (point))))
+
+(defun ac-html--inside-comment ()
+  "Return t if cursor inside comment.")
+
 ;;; auto complete HTML for html-mode and web-mode
 
-(defun ac-html-current-tag ()
-  "Return current html tag user is typing on."
-  (save-excursion
-    (re-search-backward "<\\(\\w+\\)[[:space:]]+" nil t)
-    (match-string 1)))
+(defun ac-html-tag-prefix ()
+  (if (ac-html--inside-attrv)
+      nil
+    (save-match-data
+      (save-excursion
+        (re-search-backward "<\\([^\n\t >'\"]*\\)" nil t))
+      (match-beginning 1))))
 
-(defun ac-html-current-attr ()
-  "Return current html tag's attribute user is typing on."
-  (save-excursion
-    (re-search-backward "[^a-z-]\\([a-z-]+\\)=" nil t)
-    (match-string 1)))
+(defun ac-html-attr-prefix ()
+  (if (ac-html--inside-attrv)
+      nil
+    (save-match-data
+      (save-excursion
+        (re-search-backward "<\\w[^>]*[[:space:]]+\\(.*\\)" nil t))
+      (match-beginning 1))))
 
 (defun ac-html-value-prefix ()
   (if (re-search-backward "\\w=[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
       (match-beginning 2)))
 
+(defun ac-html-current-tag ()
+  "Return current html tag user is typing on."
+  (save-excursion
+    (save-match-data
+      (re-search-backward "<\\(\\w+\\)[[:space:]]+" nil t)
+      (match-string 1))))
+
+(defun ac-html-current-attr ()
+  "Return current html tag's attribute user is typing on."
+  (save-excursion
+    (re-search-backward "[^a-z-]\\([a-z-]+\\)[\n\t ]*=" nil t)
+    (match-string 1)))
+
 ;;;###autoload
 (ac-html-define-ac-source "html"
-  :tag-prefix "<\\(.*\\)"
-  :attr-prefix "<\\w[^>]*[[:space:]]+\\(.*\\)"
+  :tag-prefix ac-html-tag-prefix
+  :attr-prefix ac-html-attr-prefix
   :attrv-prefix ac-html-value-prefix
   :current-tag-func ac-html-current-tag
   :current-attr-func ac-html-current-attr)
