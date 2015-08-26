@@ -48,6 +48,7 @@
 
 ;;; Provider
 
+;;;###autoload
 (defmacro ac-html-define-data-provider (provider &rest pairs)
   "Define ac-html data provider with this macro.
 This macro is buggy and cannot be used now."
@@ -81,7 +82,7 @@ This macro is buggy and cannot be used now."
        (put ,provider :id-doc-func ,id-doc-func)
        (put ,provider :class-doc-func ,class-doc-func))))
 
-
+;;;###autoload
 (defun ac-html-enable-data-provider (provider)
   "Enable data provider PROVIDER."
   (add-to-list 'ac-html-enabled-data-providers provider))
@@ -91,6 +92,7 @@ This macro is buggy and cannot be used now."
 
 ;;; Language (Adaptor)
 
+;;;###autoload
 (defmacro ac-html-define-ac-source (lang &rest pairs)
   "Define ac-html lang with this macro."
   (declare (indent 1) (debug t))
