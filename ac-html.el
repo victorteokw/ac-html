@@ -38,7 +38,8 @@ Has bug for quoted quote."
     (equal (match-end 1) (point))))
 
 (defun ac-html--inside-comment ()
-  "Return t if cursor inside comment.")
+  "Return t if cursor inside comment.
+Not implemented yet.")
 
 ;;; auto complete HTML for html-mode and web-mode
 
@@ -63,14 +64,16 @@ Has bug for quoted quote."
       (match-beginning 2)))
 
 (defun ac-html-current-tag ()
-  "Return current html tag user is typing on."
+  "Return current html tag user is typing on.
+There is a bug if attrv contains string like this <a"
   (save-excursion
     (save-match-data
       (re-search-backward "<\\(\\w+\\)[[:space:]]+" nil t)
       (match-string 1))))
 
 (defun ac-html-current-attr ()
-  "Return current html tag's attribute user is typing on."
+  "Return current html tag's attribute user is typing on.
+There is a bug if attrv contains string like this href="
   (save-excursion
     (re-search-backward "[^a-z-]\\([a-z-]+\\)[\n\t ]*=" nil t)
     (match-string 1)))
