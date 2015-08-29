@@ -3,11 +3,9 @@
 ;; Copyright (C) 2014 - 2015 Zhang Kai Yu
 
 ;; Author: Zhang Kai Yu <yeannylam@gmail.com>
-
 ;; Version: 0.4.alpha
 ;; Keywords: html, auto-complete, slim, haml, jade
 ;; Package-Requires: ((auto-complete "1.4") (s "1.9") (f "0.17") (dash "2.10"))
-
 ;; URL: https://github.com/cheunghy/ac-html
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -29,9 +27,7 @@
 
 ;;; Code:
 
-
 (require 'ac-html-core)
-
 
 (defun ac-html--inside-attrv ()
   "Return t if cursor inside attrv aka string.
@@ -40,7 +36,6 @@ Has bug for quoted quote."
     (save-excursion
       (re-search-backward "\\w+[\n\t ]*=[\n\t ]*[\"']\\([^\"']*\\)" nil t))
     (equal (match-end 1) (point))))
-
 
 (defun ac-html--inside-comment ()
   "Return t if cursor inside comment.
