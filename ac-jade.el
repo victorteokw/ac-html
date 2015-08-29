@@ -22,9 +22,6 @@
 
 ;; Configuration:
 ;;
-;; Add to hook `ac-jade-enable'
-;;
-;; (add-hook 'jade-mode-hook 'ac-jade-enable)
 
 ;;; Code:
 

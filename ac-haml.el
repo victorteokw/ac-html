@@ -22,9 +22,6 @@
 
 ;; Configuration:
 ;;
-;; Add to hook `ac-haml-enable'
-;;
-;; (add-hook 'haml-mode-hook 'ac-haml-enable)
 
 ;;; Code:
 

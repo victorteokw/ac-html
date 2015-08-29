@@ -23,9 +23,6 @@
 
 ;; Configuration:
 ;;
-;; Add to hook `ac-slim-enable'
-;;
-;; (add-hook 'slim-mode-hook 'ac-slim-enable)
 
 ;;; Code:
 
