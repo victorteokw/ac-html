@@ -91,6 +91,12 @@ on first line. Will fix later."
            (re-search-backward " \\(.*\\)" nil t)
            (match-beginning 1)))))
 
+(defun ac-slim-attrv-prefix ()
+  (and (not (ac-slim-inside-ruby-code))
+       (not (ac-slim-inside-non-slim-block))
+       (if (re-search-backward "\\w *= *[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
+           (match-beginning 2))))
+
 (defun ac-slim-current-tag ()
   "Return current slim tag user is typing on."
   (let* ((line (buffer-substring-no-properties (line-beginning-position)
@@ -104,12 +110,6 @@ on first line. Will fix later."
   "Return current html tag's attribute user is typing on."
   (save-excursion (re-search-backward "[^a-z-]\\([a-z-]+\\) *=" nil t))
   (match-string 1))
-
-(defun ac-slim-attrv-prefix ()
-  (and (not (ac-slim-inside-ruby-code))
-       (not (ac-slim-inside-non-slim-block))
-       (if (re-search-backward "\\w *= *[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
-           (match-beginning 2))))
 
 ;;;###autoload
 (ac-html-define-ac-source "slim"

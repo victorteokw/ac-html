@@ -26,7 +26,6 @@
 ;;
 ;; (add-hook 'haml-mode-hook 'ac-haml-enable)
 
-
 ;;; Code:
 
 (require 'ac-html-core)
@@ -41,7 +40,7 @@
   (save-excursion (re-search-backward "[^a-z-]\\([a-z-]+\\) *=" nil t))
   (match-string 1))
 
-(defun ac-haml-value-prefix ()
+(defun ac-haml-attrv-prefix ()
   (if (re-search-backward "\\w+ *=[>]? *[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
       (match-beginning 2)))
 
@@ -49,7 +48,7 @@
 (ac-html-define-ac-source "haml"
   :tag-prefix "%\\(.*\\)"
   :attr-prefix ":\\(.*\\)"
-  :attrv-prefix ac-haml-value-prefix
+  :attrv-prefix ac-haml-attrv-prefix
   :current-tag-func ac-haml-current-tag
   :current-attr-func ac-haml-current-attr)
 

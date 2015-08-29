@@ -40,7 +40,7 @@
   (save-excursion (re-search-backward "[^a-z-]\\([a-z-]+\\) *=" nil t))
   (match-string 1))
 
-(defun ac-jade-value-prefix ()
+(defun ac-jade-attrv-prefix ()
   (if (re-search-backward "\\w *= *[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
       (match-beginning 2)))
 
@@ -48,7 +48,7 @@
 (ac-html-define-ac-source "jade"
   :tag-prefix "^[\t ]*\\(.*\\)"
   :attr-prefix "\\(?:,\\|(\\)[ ]*\\(.*\\)"
-  :attrv-prefix ac-jade-value-prefix
+  :attrv-prefix ac-jade-attrv-prefix
   :current-tag-func ac-jade-current-tag
   :current-attr-func ac-jade-current-attr)
 
