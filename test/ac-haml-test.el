@@ -16,9 +16,3 @@
   (test-suite-haml-current-thing-scan
    (lambda ()
      (should (equal (ac-haml-current-tag) "title")))))
-
-(ert-deftest test-ac-source-haml-attribute-candidates ()
-  "Test `ac-haml-current-attribute' return correctly."
-  (test-suite-haml-current-thing-scan
-   (lambda ()
-     (should (member "class" (ac-source-haml-attribute-candidates))))))

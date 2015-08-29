@@ -1,4 +1,6 @@
-all :unittest
+all: test
 
-unittest:
-	cask exec emacs -batch -Q -L . -l test/run-test.el -f ert-run-tests-batch-and-exit
+test:
+	cask exec emacs -batch -Q -L . -l test/test-runner.el
+
+.PHONY: test

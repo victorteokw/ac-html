@@ -16,9 +16,3 @@
   (test-suite-jade-current-thing-scan
    (lambda ()
      (should (equal (ac-jade-current-tag) "title")))))
-
-(ert-deftest test-ac-source-jade-attribute-candidates ()
-  "Test `ac-source-jade-attribute-candidates' return correctly."
-  (test-suite-jade-current-thing-scan
-   (lambda ()
-     (should (member "class" (ac-source-jade-attribute-candidates))))))

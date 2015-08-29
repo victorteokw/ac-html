@@ -1,6 +1,6 @@
 ;;; ac-haml.el --- auto complete source for html tag and attributes
 
-;; Copyright (C) 2014 Zhang Kai Yu
+;; Copyright (C) 2014 - 2015 Zhang Kai Yu
 
 ;; Author: Zhang Kai Yu <yeannylam@gmail.com>
 ;; Keywords: html, auto-complete, rails, ruby
@@ -22,71 +22,32 @@
 
 ;; Configuration:
 ;;
-;; Add to hook `ac-haml-enable'
-;; 
-;; (add-hook 'haml-mode-hook 'ac-haml-enable)
-
 
 ;;; Code:
 
-(require 'ac-html)
+(require 'ac-html-core)
 
 (defun ac-haml-current-tag ()
   "Return current haml tag user is typing on."
   (save-excursion (re-search-backward "%\\(\\w+\\)" nil t))
   (match-string 1))
 
-(defun ac-haml-current-attribute ()
+(defun ac-haml-current-attr ()
   "Return current html tag's attribute user is typing on."
   (save-excursion (re-search-backward "[^a-z-]\\([a-z-]+\\) *=" nil t))
   (match-string 1))
 
-(defun ac-source-haml-attribute-candidates ()
-  (ac-html--attribute-candidates (ac-haml-current-tag)
-				 #'(lambda (symbol)
-				     (ac-html--attribute-documentation symbol (ac-haml-current-tag)))))
-
-(defun ac-source-haml-tag-candidates ()
-  (ac-html--tags))
-
-(defun ac-source-haml-value-candidates ()
-  (ac-source--html-attribute-values
-   (ac-haml-current-tag) (ac-haml-current-attribute)))
-
-(defun ac-haml-value-prefix ()
-  ;; %foo{ bar => ""}
-  ;; %foo( :bar = "")
+(defun ac-haml-attrv-prefix ()
   (if (re-search-backward "\\w+ *=[>]? *[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
       (match-beginning 2)))
 
-(defvar ac-source-haml-tag
-  '((candidates . ac-source-haml-tag-candidates)
-    (prefix . "%\\(.*\\)")
-    (symbol . "t")))
-
-(defvar ac-source-haml-attribute
-  '((candidates . ac-source-haml-attribute-candidates)
-    (prefix . ":\\(.*\\)")
-    (symbol . "a")))
-
-(defvar ac-source-haml-attribute-value
-  '((candidates . ac-source-haml-value-candidates)
-    (prefix . ac-haml-value-prefix)
-    (symbol . "v")))
-
 ;;;###autoload
-(defun ac-haml-enable ()
-  "Add ac-haml sources into ac-sources and enable auto-comple-mode"
-  (interactive)
-  (mapc (lambda (source)
-	  (if (not (memq source ac-sources))
-	      (add-to-list 'ac-sources source)))
-	'(ac-source-haml-attribute-value ac-source-haml-attribute ac-source-haml-tag))
-
-  ;; ac-source-haml-attribute-value complete in font-lock-string-face, must not be disabled
-  (make-local-variable 'ac-disable-faces)
-  (setq ac-disable-faces (remove 'font-lock-string-face ac-disable-faces))
-  (auto-complete-mode t))
+(ac-html-define-ac-source "haml"
+  :tag-prefix "%\\(.*\\)"
+  :attr-prefix ":\\(.*\\)"
+  :attrv-prefix ac-haml-attrv-prefix
+  :current-tag-func ac-haml-current-tag
+  :current-attr-func ac-haml-current-attr)
 
 (provide 'ac-haml)
 ;;; ac-haml.el ends here
