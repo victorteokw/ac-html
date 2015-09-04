@@ -77,7 +77,7 @@ on first line. Will fix later."
        (not (ac-slim-inside-non-slim-block))
        (save-match-data
          (save-excursion
-           (re-search-backward "\\(^[\t ]*\\|:[\t ]*\\)\\([^ \t]*\\)" nil t)
+           (re-search-backward "\\(^[\t ]*\\|:[\t ]*\\)\\([a-zA-Z]*\\)" nil t)
            (match-beginning 2)))))
 
 (defun ac-slim-attr-prefix ()
@@ -93,6 +93,22 @@ on first line. Will fix later."
        (not (ac-slim-inside-non-slim-block))
        (if (re-search-backward "\\w *= *[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
            (match-beginning 2))))
+
+(defun ac-slim-class-prefix ()
+  (and (not (ac-slim-inside-ruby-code))
+       (not (ac-slim-inside-non-slim-block))
+       (save-match-data
+         (save-excursion
+           (re-search-backward "\\(^[\t ]*\\|:[\t ]*\\)\\([a-zA-Z0-9#.]*\\.\\)\\([a-zA-Z0-9]\\)" nil t)
+           (match-beginning 3)))))
+
+(defun ac-slim-id-prefix ()
+  (and (not (ac-slim-inside-ruby-code))
+       (not (ac-slim-inside-non-slim-block))
+       (save-match-data
+         (save-excursion
+           (re-search-backward "\\(^[\t ]*\\|:[\t ]*\\)\\([a-zA-Z0-9.]*#\\)\\([a-zA-Z0-9]\\)" nil t)
+           (match-beginning 3)))))
 
 (defun ac-slim-current-tag ()
   "Return current slim tag user is typing on."
@@ -113,14 +129,10 @@ on first line. Will fix later."
   :tag-prefix ac-slim-tag-prefix
   :attr-prefix ac-slim-attr-prefix
   :attrv-prefix ac-slim-attrv-prefix
+  :class-prefix ac-slim-class-prefix
+  :id-prefix ac-slim-id-prefix
   :current-tag-func ac-slim-current-tag
   :current-attr-func ac-slim-current-attr)
-(ac-html-define-ac-source "html"
-  :tag-prefix ac-html-tag-prefix
-  :attr-prefix ac-html-attr-prefix
-  :attrv-prefix ac-html-value-prefix
-  :current-tag-func ac-html-current-tag
-  :current-attr-func ac-html-current-attr)
 
 (provide 'ac-slim)
 ;;; ac-slim.el ends here
