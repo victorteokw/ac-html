@@ -56,21 +56,29 @@
               "[ \t]*\\(ruby\\|javascript\\|coffee\\):[ \t]*"
               content-of-line))))
 
+(defun ac-slim--line-is-empty ()
+  "Return t if line is empty."
+  (s-matches-p "^[ \t]*$" (buffer-substring-no-properties
+                           (line-beginning-position)
+                           (line-end-position))))
+
 (defun ac-slim-inside-non-slim-block ()
-  "Return t if inside ruby block, coffee block. Has bug when declare ruby:
-on first line. Will fix later."
-  (save-excursion
-    (let ((current-leading-spaces (ac-slim--line-leading-spaces)) (lup t)
-          (retval nil))
-      (while lup
+  "Return t if inside ruby block, coffee block."
+  (catch 'blk
+    (save-excursion
+      (let ((min-number-of-leading-spaces (ac-slim--line-leading-spaces)))
         (if (ac-slim--line-is-block-indicator)
-            (setq retval t lup nil)
-          (if (< (ac-slim--line-leading-spaces) current-leading-spaces)
-              (setq current-leading-spaces (ac-slim--line-leading-spaces)))
+            (throw 'blk t))
+        (while (not (or (= min-number-of-leading-spaces 0)
+                        (= 1 (line-number-at-pos))))
           (forward-line -1)
-          (setq lup (not (or (= current-leading-spaces 0)
-                             (= 1 (line-number-at-pos)))))))
-      retval)))
+          (if (ac-slim--line-is-empty)
+              nil
+            (if (< (ac-slim--line-leading-spaces) min-number-of-leading-spaces)
+                (progn
+                  (setq min-number-of-leading-spaces (ac-slim--line-leading-spaces))
+                  (if (ac-slim--line-is-block-indicator)
+                      (throw 'blk t))))))))))
 
 (defun ac-slim-tag-prefix ()
   (and (not (ac-slim-inside-ruby-code))
