@@ -100,7 +100,7 @@
 (defun ac-slim-attrv-prefix ()
   (and (not (ac-slim-inside-ruby-code))
        (not (ac-slim-inside-non-slim-block))
-       (if (re-search-backward "\\w *= *[\"']\\([^\"']+[ ]\\|\\)\\(.*\\)" nil t)
+       (if (re-search-backward "\\w *= *[\"']\\([^\"']+[ ]\\|\\)\\(.*\\)" (line-beginning-position) t)
            (match-beginning 2))))
 
 (defun ac-slim-class-prefix ()
