@@ -91,6 +91,7 @@
 (defun ac-slim-attr-prefix ()
   (and (not (ac-slim-inside-ruby-code))
        (not (ac-slim-inside-non-slim-block))
+       (not (ac-slim-attrv-prefix))
        (save-match-data
          (save-excursion
            (re-search-backward " \\(.*\\)" nil t)
@@ -99,7 +100,7 @@
 (defun ac-slim-attrv-prefix ()
   (and (not (ac-slim-inside-ruby-code))
        (not (ac-slim-inside-non-slim-block))
-       (if (re-search-backward "\\w *= *[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
+       (if (re-search-backward "\\w *= *[\"']\\([^\"']+[ ]\\|\\)\\(.*\\)" nil t)
            (match-beginning 2))))
 
 (defun ac-slim-class-prefix ()
