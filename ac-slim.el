@@ -100,8 +100,17 @@
 (defun ac-slim-attrv-prefix ()
   (and (not (ac-slim-inside-ruby-code))
        (not (ac-slim-inside-non-slim-block))
-       (if (re-search-backward "\\w *= *[\"']\\([^\"']+[ ]\\|\\)\\(.*\\)" (line-beginning-position) t)
-           (match-beginning 2))))
+       (let (mb2)
+         (save-excursion
+           (save-match-data
+             (if (re-search-backward
+                  "\\w *= *[\"']\\([^\"']+[ ]\\|\\)\\([^\"']*\\)"
+                  (line-beginning-position) t)
+                 (progn
+                   (setq mb2 (match-beginning 2))
+                   (setq me2 (match-end 2))))))
+         (if (and mb2 (>= me2 (point)))
+             mb2))))
 
 (defun ac-slim-class-prefix ()
   (and (not (ac-slim-inside-ruby-code))
