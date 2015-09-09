@@ -41,7 +41,6 @@
   (if (re-search-backward "\\w *= *[\"]\\([^\"]+[ ]\\|\\)\\(.*\\)" nil t)
       (match-beginning 2)))
 
-;;;###autoload
 (ac-html-define-ac-source "jade"
   :tag-prefix "^[\t ]*\\(.*\\)"
   :attr-prefix "\\(?:,\\|(\\)[ ]*\\(.*\\)"

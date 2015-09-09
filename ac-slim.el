@@ -141,7 +141,6 @@
   (save-excursion (re-search-backward "[^a-z-]\\([a-z-]+\\) *=" nil t))
   (match-string 1))
 
-;;;###autoload
 (ac-html-define-ac-source "slim"
   :tag-prefix ac-slim-tag-prefix
   :attr-prefix ac-slim-attr-prefix

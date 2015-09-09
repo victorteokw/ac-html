@@ -9,7 +9,6 @@
 (defun ac-html-testing-ids ()
   '("id1" "id2" "id3"))
 
-;;;###autoload
 (ac-html-define-data-provider 'ac-html-testing-data-provider
   :tag-func 'ac-html-testing-tags
   :class-func 'ac-html-testing-classes

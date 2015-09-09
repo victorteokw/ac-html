@@ -78,7 +78,6 @@ There is a bug if attrv contains string like this href="
     (re-search-backward "[^a-z-]\\([a-z-]+\\)[\n\t ]*=" nil t)
     (match-string 1)))
 
-;;;###autoload
 (ac-html-define-ac-source "html"
   :tag-prefix ac-html-tag-prefix
   :attr-prefix ac-html-attr-prefix

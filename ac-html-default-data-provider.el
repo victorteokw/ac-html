@@ -127,7 +127,6 @@
       (ac-html--read-file
        (web-completion-data-attrv-global-doc-file attr attrv))))
 
-;;;###autoload
 (ac-html-define-data-provider 'ac-html-default-data-provider
   :tag-func 'ac-html-default-tags
   :attr-func 'ac-html-default-attrs
