@@ -1,7 +1,6 @@
 ;;; ac-slim.el --- auto complete source for html tag and attributes
 
-;; Copyright (C) 2014  Zhang Kai Yu, Olexandr Sydorchuck
-;;               2015  Zhang Kai Yu
+;; Copyright (C) 2015  Zhang Kai Yu
 
 ;; Author: Zhang Kai Yu <yeannylam@gmail.com>
 ;; Keywords: html, auto-complete, slim, ruby
