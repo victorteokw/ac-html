@@ -99,7 +99,7 @@
 (defun ac-slim-attrv-prefix ()
   (and (not (ac-slim-inside-ruby-code))
        (not (ac-slim-inside-non-slim-block))
-       (let (mb2)
+       (let (mb2 me2)
          (save-excursion
            (save-match-data
              (if (re-search-backward
