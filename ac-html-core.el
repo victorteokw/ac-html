@@ -25,6 +25,7 @@
 
 (require 'auto-complete)
 (require 'cl-lib)
+(require 'dash)
 
 ;;; Customization
 

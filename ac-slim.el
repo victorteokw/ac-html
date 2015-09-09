@@ -27,7 +27,7 @@
 
 (require 'ac-html-core)
 
-(require 'dash)
+(require 's)
 
 (defun ac-slim-inside-ruby-code ()
   "Return t if inside ruby code."
