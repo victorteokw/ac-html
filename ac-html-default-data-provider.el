@@ -1,9 +1,16 @@
 (require 'ac-html-core)
 (require 'f)
-(require 'web-completion-data (f-expand "../web-completion-data.el"
-                                        (or load-file-name (buffer-file-name))))
 
 ;;; web-completion-data helpers
+
+(defconst web-completion-data-package-dir
+  (file-name-directory (or load-file-name (buffer-file-name)))
+  "The directory where `web-completion-data' package exists.")
+
+(defconst web-completion-data-html-source-dir
+  (expand-file-name "completion-data" web-completion-data-package-dir)
+  "The directory where basic completion source of `web-completion-data'
+ exists.")
 
 (defconst web-completion-data-tag-list-file
   (f-expand "html-tag-list" web-completion-data-html-source-dir))
