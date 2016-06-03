@@ -1,5 +1,12 @@
-ac-html [![melpa badge][melpa-badge]][melpa-link] [![melpa stable badge][melpa-stable-badge]][melpa-stable-link] [![Build Status](https://travis-ci.org/cheunghy/ac-html.svg?branch=master)](https://travis-ci.org/cheunghy/ac-html)
+ac-html [![melpa badge][melpa-badge]][melpa-link] [![melpa stable badge][melpa-stable-badge]][melpa-stable-link]
 =======
+### Notice
+
+This project is not maintained anymore. If you like it, fork it. Or consider using alternatives.
+
+Thanks!
+
+### Description
 
 Emacs auto complete source for html, slim, haml, and jade.
 
