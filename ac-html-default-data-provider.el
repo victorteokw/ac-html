@@ -70,14 +70,9 @@
 (defun ac-html--load-list-from-file (filepath)
   "Return a list separated by \\n from FILEPATH."
   (if (file-exists-p filepath)
-      (with-current-buffer (find-file-noselect filepath)
-        (unwind-protect
-            (split-string
-             (save-restriction
-               (widen)
-               (buffer-substring-no-properties (point-min) (point-max)))
-             "\n" t)
-          (kill-buffer)))
+      (with-temp-buffer
+        (insert-file-contents filepath)
+        (split-string (buffer-string) "\n" t))
     nil))
 
 (defun ac-html--read-file (file)
